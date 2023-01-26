@@ -17,7 +17,7 @@ We gaan met 2D game framework Löve2D een spel met vallende blokken maken.
 
 ![voorbeeld van de stukken](imgs/2.png)
 
-Er zijn 7 verschillende stuk. Elk stuk bestaat uit 4 kleinere blokken.
+Er zijn 7 verschillende stukken. Elk stuk bestaat uit 4 kleinere blokken.
 
 Stukken vallen vanaf boven het speelveld. De speler kan het stuk verplaatsen naar links en rechts en het stuk
 ronddraaien. Als een stuk is geland, valt er een volgend stuk.
@@ -55,24 +55,32 @@ Alle verschillende stukken worden in het rooster opgeslagen met de hoe ze gedraa
 
 ![voorbeeld van gedraaide stukken](imgs/5.png)
 
+Een vallend stuk wordt opgeslagen met een getal dat aangeeft welk type stuk het is, hoe het gedraaid is
+en wat de positie is in het rooster. Voor de positie worden X en Y waarden gebruikt.
 
-The currently falling piece is stored as a number representing which type of piece it is, a number representing which rotation variation it is at, and numbers representing its X and Y position in the playing area.
+Een nieuw stuk wordt boven het rooster getoond, maar niet als er te weinig voor is door al gestapelde blokken. In dat geval is 
+het spel afgelopen.
 
-A new piece is created at the top of the screen, unless it would overlap an inert block, in which case the game is over.
+De speler kan de stukken verplaatsen naar links en rechts, maar niet als het een stuk dat al gestapeld is overlapt. Een
+stuk kan ook niet buiten het rooster verplaatst worden.
 
-The player can move the piece left and right, unless this new position would overlap an inert block or be outside the playing area.
+Als er wat tijd is verlopen, verplaatst het stuk één rij blokken naar beneden. Dit gebeurt alleen als de nieuwe positie
+van het stuk niet overlapt met al gestapelde blokken en niet buiten het rooster valt.
 
-After an amount of time has passed, the piece moves down, unless this new position would overlap an inert block or be outside the playing area, in which case it has come to rest.
+Als knop `z` of `x` wordt ingedrukt, draait het stuk tegen de klok in of met de klok mee. Maar niet als het stuk dan
+overlapt met al gestapelde blokken of buiten het rooster valt.
 
-When one of the rotate buttons is pressed, the piece changes its rotation variation, unless this variation would overlap an inert block or be outside the playing area.
+Als de val knop `c` wordt ingedrukt, gaat het stuk sneller naar beneden, totdat het landt op al geplaatste stukken. 
 
-When the drop button is pressed, the piece moves down until the next position would overlap an inert block or be outside the playing area, at which point it has come to rest.
+Als het stuk is geland, wordt een nieuw stuk gemaakt boven het rooster.
 
-When a piece comes to rest, the blocks of the piece are added to the inert blocks, and the next piece is created.
-
-A sequence of one of each of the seven pieces in a random order is created, and the next piece is taken from this sequence. Once all of the pieces have been taken, a new random sequence is created.
+De 7 verschillende stukken worden in een willekeurige volgorde aangeboden.
 
 ## Programmeren
+
+Verder uitwerken: waar Love downloaden, hoe installeren en gebruiken, bijvoorbeeld:
+* main.lua in <directory>
+* love.exe <directory>/
 
 ### Het rooster tekenen
 
@@ -129,12 +137,15 @@ end
 ```
 ![het ingekleurde rooster](imgs/7.png)
 
-### Storing inert blocks
-The grid for the inert blocks is created and every block is set to ' ' (a string containing the space character), representing an empty block.
+### De gevallen blokken bewaren
 
-The width and height of the grid in blocks is reused from drawing the blocks, so they are made into variables.
+Het rooster voor de gevallen blokken is gemaakt en elk blok wordt als `' '` (spatie) gezet wat betekend 
+dat het vak leeg is.
 
-Full code at this point
+We gaan de breedte en hoogte van het rooster gebruiken om de blokken te tekenen, dus we zetten de waarden 10 en 18 in 
+variabelen.
+
+De volledige code tot op dit punt:
 
 ```lua
 function love.load()
@@ -166,7 +177,7 @@ When blocks are drawn, the color is set based on what type the block is.
 
 To test this, some blocks in the inert grid are set to different types.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.load()
@@ -394,7 +405,7 @@ end
 ### Drawing the piece
 The piece is drawn by looping through its structure, and, unless the block is empty, drawing a square with a color determined by the block type.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.draw()
@@ -436,7 +447,7 @@ end
 ### Simplifying code
 The code for drawing an inert block and drawing a block of the falling piece is similar, so a function is made.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.draw()
@@ -490,7 +501,7 @@ Likewise, when the z key is pressed, the piece rotation number is decreased by 1
 
 If the rotation number is less than 1, the rotation number is set to the number of rotation positions (i.e. the last rotation position).
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.keypressed(key)
@@ -514,7 +525,7 @@ end
 ### Testing pieces
 For testing purposes, the up and down arrows cycle through the piece types.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.keypressed(key)
@@ -544,7 +555,7 @@ end
 ### Setting piece position
 The position of the piece in the playing area is stored, and the piece is drawn at that position.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.load()
@@ -573,7 +584,7 @@ end
 ### Moving the piece
 The left and right arrows subtract or add 1 to the piece's X position.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.keypressed(key)
@@ -600,7 +611,7 @@ When the timer is at or above 0.5 it is reset to 0.
 
 For now, 'tick' is printed every time the piece will fall.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.load()
@@ -622,7 +633,7 @@ end
 ### Falling
 The timer is used to increase the piece's Y position every 0.5 seconds.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.update(dt)
@@ -645,7 +656,7 @@ To begin with, this function will always return true, so moving and rotating is 
 
 The code is changed from immediately setting positions/rotations, to creating variables for the changed values, and if the checking function returns true, the actual position/rotation is set to the changed values.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.load()
@@ -709,7 +720,7 @@ end
 ### Checking left of playing area
 If any block is not empty and its X position is less than 1 (i.e. off the left of the playing area), then the function returns false.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.load()
@@ -733,7 +744,7 @@ end
 ### Simplifying code
 The number of blocks each piece has on the X and Y axes are reused from drawing the pieces, so variables are made for them.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.load()
@@ -773,7 +784,7 @@ end
 ### Checking right of playing area
 If any block's X position is greater than the width of the playing area (i.e. off the right of the playing area), then the function also returns false.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.load()
@@ -799,7 +810,7 @@ end
 ### Checking bottom of playing area
 If any block's Y position is greater than the height of the playing area (i.e off the bottom of the playing area), then the function also returns false.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.load()
@@ -828,7 +839,7 @@ If there is an inert block at any block's position, then the function also retur
 
 To test this, an inert block is manually set.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.load()
@@ -861,7 +872,7 @@ end
 #### Simplifying code
 The calculated block positions to test are reused, so they are stored in variables.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.load()
@@ -892,7 +903,7 @@ end
 ### Drop
 When the c key is pressed, the piece's Y position is increased by 1 while that position is movable.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.keypressed(key)
@@ -910,7 +921,7 @@ end
 ### Resetting piece
 If the timer ticks and the piece can't move down, the piece is reset to its initial position and rotation, and (for now) its initial type.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.update(dt)
@@ -934,7 +945,7 @@ end
 ### Simplifying code
 The piece is set to its initial state in two places, so a function is made.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.load()
@@ -974,7 +985,7 @@ Each number representing a piece type is looped through and inserted into the se
 
 To test this, a new sequence is created when the s key is pressed, and the sequence is printed.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.load()
@@ -1015,7 +1026,7 @@ When the sequence is empty, a new sequence is created.
 
 The newPiece function is moved below the newSequence function.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.load()
@@ -1040,7 +1051,7 @@ When a piece has come to rest, the piece's blocks are added to the inert blocks.
 
 The piece's blocks are looped through, and if a block isn't empty, then the inert block at this position is set to the type of the piece's block.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.update(dt)
@@ -1074,7 +1085,7 @@ When a piece is dropped, the timer is set immediately to the limit so that addin
 
 The timer limit is reused, so it is made into a variable.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.load()
@@ -1110,7 +1121,7 @@ Each row of the inert blocks is looped through, and if none of the columns of th
 
 For now, the complete row numbers are printed out.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.update(dt)
@@ -1162,7 +1173,7 @@ Each block in the row is looped through and set to the value of the block above 
 
 The top row is then set to all empty blocks.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.update(dt)
@@ -1201,7 +1212,7 @@ If a newly created piece is in an unmovable position, then the game is over.
 
 For now, love.load is called to reset the game to its initial state.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.update(dt)
@@ -1220,7 +1231,7 @@ end
 ### Offsetting the playing area
 The playing area is drawn 2 blocks from the left of the screen and 5 blocks from the top of the screen.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.draw()
@@ -1251,7 +1262,7 @@ end
 ### Drawing the upcoming piece
 The last piece of the sequence (i.e. the next piece to fall) is drawn at its first rotation position. It is offset 5 blocks from the left and 1 block from the top.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.draw()
@@ -1291,7 +1302,7 @@ end
 ### Resetting the game
 When the game is over, only some of the variables need to be reset, so a function is made.
 
-Full code at this point
+De volledige code tot op dit punt:
 
 ```lua
 function love.load()
