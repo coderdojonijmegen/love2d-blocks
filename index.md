@@ -173,10 +173,15 @@ end
 ```
 
 ### Setting block color
-When blocks are drawn, the color is set based on what type the block is.
+De kleur van de blokken die we gaan tekenen wordt bepaald door het type. 
 
-To test this, some blocks in the inert grid are set to different types.
+Om dit testen zetten we verschillende typen blokken in het rooster.
+De types geven we aan met een letter: i,j,l,o.. etc. Vervolgens koppelen we een kleur aan elk type.
+Bijvoorbeeld:
 
+```lua
+i = {.47, .76, .94},
+```
 De volledige code tot op dit punt:
 
 ```lua
@@ -226,7 +231,8 @@ end
 ![het rooster met blokken in de verschillende kleuren](imgs/8.png)
 
 ### Storing the piece structures
-Each rotation of a piece structure is stored as a 4 by 4 grid of strings.
+Een puzzelstuk  bestaat uit verschillende blokken. We slaan de variaties van puzzelstuk op als een nieuw raster. 
+In dit raster kunnen we ook de gedraaide versies van het puzzelstuk bewaren.
 
 ```lua
 {
@@ -236,7 +242,10 @@ Each rotation of a piece structure is stored as a 4 by 4 grid of strings.
     {' ', ' ', ' ', ' '},
 }
 ```
-Each piece structure is stored as a table of piece rotations.
+Elk puzzelstuk kan 4 varianten hebben, want hij kan 4 kanten op gedraaid zijn.
+We slaan dus 4 varianten op voor elk puzzelstuk. in het geval van de rechte lijn zijn dit er eigenlijk maar 2. Deze vorm is namelijk symmetrisch over 1 as.
+De kubus heeft maar 1 variant. Deze is namelijk symmetrisch over 2 assen.
+De rechte lijn ziet er als volgt uit.
 
 ```lua
 {
@@ -255,7 +264,7 @@ Each piece structure is stored as a table of piece rotations.
 }
 ```
 
-All of piece structures are stored in a table.
+Dit zijn alle puzzelstukken:
 
 ```lua
 pieceStructures = {
@@ -493,13 +502,13 @@ function love.draw()
 end
 ```
 ### Rotation
-When the x key is pressed, the piece's rotation number is increased by 1, rotating the piece clockwise.
+Wanneer we op de x toets drukken willen wat dat het stuk draait. Dit doen we door het rotation getal op te hogen met 1.
 
-If the rotation number is greater than the number of rotation positions, the rotation number is set to 1 (i.e. the first rotation position).
+Als het rotation getal hoger is dan de verschillende draai posities (4, 2 of 1). Dan wordt het getal terug gezet naar 1.
 
-Likewise, when the z key is pressed, the piece rotation number is decreased by 1, rotating the piece counterclockwise.
+Als we op z drukken willen we dat het het stuk de andere kant op draait. Dit doen we door 1 af te trekken van het rotation getal.
 
-If the rotation number is less than 1, the rotation number is set to the number of rotation positions (i.e. the last rotation position).
+Als het getal lager wordt dan 0. Zetten we het weer terug naar 1.
 
 De volledige code tot op dit punt:
 
