@@ -400,7 +400,8 @@ pieceStructures = {
 ```
 
 ### Storing the current piece
-The currently falling piece is represented by a number indicating which type it is (which will be used to index the table of piece structures), and a number indicating which rotation it is at (which will be used to index the table of rotations).
+Er kan altijd maar een puzzelstuk tegelijkertijd vallen. We kunnen dit puzzelstuk opslaan met de variabele pieceType en pieceRotation.
+pieceType representeert welk stuk het is (lijn, blokje, etc). pieceRotation representeert hoe het stuk gedraait is.
 
 ```lua
 function love.load()
@@ -412,8 +413,7 @@ end
 ```
 
 ### Drawing the piece
-The piece is drawn by looping through its structure, and, unless the block is empty, drawing a square with a color determined by the block type.
-
+Elk puzzelstuk wordt getekent door door het raster heen te gaan en de blokken een voor een te tekenen. De kleur is afhankelijk van het blok type.
 De volledige code tot op dit punt:
 
 ```lua
@@ -454,7 +454,7 @@ end
 ![het rooster](imgs/9.png)
 
 ### Simplifying code
-The code for drawing an inert block and drawing a block of the falling piece is similar, so a function is made.
+De code voor het tekenen van een stilstaand blok lijkt erg op de code voor het tekenen van een vallend blok. We voegen daarom de functie drawBlock toe. 
 
 De volledige code tot op dit punt:
 
@@ -532,7 +532,7 @@ end
 ![het rooster](imgs/10.png)
 
 ### Testing pieces
-For testing purposes, the up and down arrows cycle through the piece types.
+We willen graag de code testen. Daarom voegen we toe dat we het puzzelstuk kunnen veranderen met de omhoog en omlaag pijltjestoetsen. 
 
 De volledige code tot op dit punt:
 
@@ -562,7 +562,7 @@ end
 ![het rooster](imgs/11.png)
 
 ### Setting piece position
-The position of the piece in the playing area is stored, and the piece is drawn at that position.
+We bewaren de positie van het puzzelstuk op in het veld, en we tekenen het puzzelstuk op die positie.
 
 De volledige code tot op dit punt:
 
@@ -591,8 +591,7 @@ end
 ![het rooster](imgs/12.png)
 
 ### Moving the piece
-The left and right arrows subtract or add 1 to the piece's X position.
-
+We gaan nu de linker en rechter pijltjestoetsen gebruiken om het puzzelstuk te verplaatsen. 
 De volledige code tot op dit punt:
 
 ```lua
