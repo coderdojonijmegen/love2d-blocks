@@ -796,12 +796,11 @@ De volledige code tot op dit punt:
 ```lua
 function love.load()
     -- vervang functie canPieceMove in zijn geheel door:
-
     function canPieceMove(testX, testY, testRotation)
         for y = 1, 4 do
             for x = 1, 4 do
                 if pieceStructures[pieceType][testRotation][y][x] ~= ' '
-                and (testX + x) < 1 then
+                        and (testX + x) < 1 then
                     return false
                 end
             end
@@ -822,7 +821,6 @@ De volledige code tot op dit punt:
 ```lua
 function love.load()
     -- vervang functie canPieceMove weer, maar nu in zijn geheel door:
-
     pieceXCount = 4
     pieceYCount = 4
 
@@ -830,7 +828,7 @@ function love.load()
         for y = 1, pieceYCount do
             for x = 1, pieceXCount do
                 if pieceStructures[pieceType][testRotation][y][x] ~= ' '
-                and (testX + x) < 1 then
+                        and (testX + x) < 1 then
                     return false
                 end
             end
@@ -842,10 +840,13 @@ function love.load()
 end
 
 function love.draw()
-    -- etc.
-
+    -- vervang:
+    for y = 1, 4 do
+        for x = 1, 4 do
+    -- met:    
     for y = 1, pieceYCount do
         for x = 1, pieceXCount do
+    --
             local block = pieceStructures[pieceType][pieceRotation][y][x]
             if block ~= ' ' then
                 drawBlock(block, x + pieceX, y + pieceY)
@@ -854,6 +855,7 @@ function love.draw()
     end
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_19)</sup>  
 
 ### Checking right of playing area (D)
 If any block's X position is greater than the width of the playing area (i.e. off the right of the playing area), then the function also returns false.
@@ -862,7 +864,7 @@ De volledige code tot op dit punt:
 
 ```lua
 function love.load()
-    -- etc.
+    -- ...
 
     function canPieceMove(testX, testY, testRotation)
         for y = 1, pieceYCount do
