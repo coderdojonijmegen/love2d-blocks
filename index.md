@@ -655,13 +655,13 @@ end
 ![het rooster](imgs/14.png)
 
 ### Confining movement (D)
-To prevent the piece from moving off the left or right of the screen when it is moved or rotated, each of its blocks are checked to see if they are within the playing area before the piece is moved or rotated.
+We willen voorkomen dat de puzzelstukken links of rechts van het scherm af kunnen bewegen. Daarom checken we altijd eerst of alle blokken nog wel in het speelveld zijn.
 
-Because this checking will be done in multiple places, it will be written as a function. This function is given the position and rotation to check, and returns true or false depending on whether the piece can move or rotate.
+We wilen deze check vaker uitvoeren, daarom stoppen we het in een functie. Dan kunnen we het makkelijk herbruiken. De functie heeft de positie en rotatie nodig. De functie geeft true of false terug om aan te geven of we mogen bewegen of draaien.
 
-To begin with, this function will always return true, so moving and rotating is still always possible.
+We noemen de functie: canpieceMove(testX, testY, testRotation). Voor nu zal de functie alleen true returnen, dan kunnen we namelijk de functie in de rest van de code verwerken.
 
-The code is changed from immediately setting positions/rotations, to creating variables for the changed values, and if the checking function returns true, the actual position/rotation is set to the changed values.
+We passen de code aan zodat de check functie eerst wordt uitgevoerd voordat we bewegen of draaien.
 
 De volledige code tot op dit punt:
 
@@ -725,7 +725,7 @@ end
 ``` 
 
 ### Checking left of playing area (D)
-If any block is not empty and its X position is less than 1 (i.e. off the left of the playing area), then the function returns false.
+We beginnen met links checken. Als het blok niet leeg is, en de x positie lager is dan 1, geeft de functie false terug. 
 
 De volledige code tot op dit punt:
 
@@ -1027,12 +1027,11 @@ end
 `3, 2, 4, 1, 7, 5, 6`
 
 ### New piece from sequence (D)
-When a new piece is created, it removes the last item from the sequence and uses it for the piece type.
+Wanneer er een nieuw puzzelstuk wordt gemaakt, halen we de vorige uit de sequence en herbruiken we het. 
 
-When the sequence is empty, a new sequence is created.
+Als de sequence leeg, is maken we een nieuwe.
 
-The newPiece function is moved below the newSequence function.
-
+We verplaatsen de newPiece functie naar onder de newSequence functie.
 De volledige code tot op dit punt:
 
 ```lua
