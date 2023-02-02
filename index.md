@@ -611,13 +611,12 @@ end
 ![het rooster](imgs/13.png)
 
 ### Timer
-Pieces will fall every 0.5 seconds.
+We willen dat elke 0.5 seconden het puzzelstuk valt.
 
-A timer variable starts at 0 and increases by dt each frame.
+We maken daarom een timer variabele, die we steeds met dt (delta time: de tijd die verstreken is) verhogen.
 
 When the timer is at or above 0.5 it is reset to 0.
-
-For now, 'tick' is printed every time the piece will fall.
+Wanneer de timer boven de 0.5 komt, resetten we de timer terug naar 0.
 
 De volledige code tot op dit punt:
 
@@ -639,7 +638,7 @@ end
 ```
 
 ### Falling
-The timer is used to increase the piece's Y position every 0.5 seconds.
+We gebruiken de timer om het stuk elke 0.5 seconden verdner aar beneden te laten vallen. 
 
 De volledige code tot op dit punt:
 
@@ -655,7 +654,7 @@ end
 
 ![het rooster](imgs/14.png)
 
-### Confining movement
+### Confining movement (D)
 To prevent the piece from moving off the left or right of the screen when it is moved or rotated, each of its blocks are checked to see if they are within the playing area before the piece is moved or rotated.
 
 Because this checking will be done in multiple places, it will be written as a function. This function is given the position and rotation to check, and returns true or false depending on whether the piece can move or rotate.
@@ -725,7 +724,7 @@ function love.keypressed(key)
 end
 ``` 
 
-### Checking left of playing area
+### Checking left of playing area (D)
 If any block is not empty and its X position is less than 1 (i.e. off the left of the playing area), then the function returns false.
 
 De volledige code tot op dit punt:
@@ -749,7 +748,7 @@ function love.load()
 end
 ```
 
-### Simplifying code
+### Simplifying code (D)
 The number of blocks each piece has on the X and Y axes are reused from drawing the pieces, so variables are made for them.
 
 De volledige code tot op dit punt:
@@ -789,7 +788,7 @@ function love.draw()
 end
 ```
 
-### Checking right of playing area
+### Checking right of playing area (D)
 If any block's X position is greater than the width of the playing area (i.e. off the right of the playing area), then the function also returns false.
 
 De volledige code tot op dit punt:
@@ -815,7 +814,7 @@ function love.load()
 end
 ```
 
-### Checking bottom of playing area
+### Checking bottom of playing area (D)
 If any block's Y position is greater than the height of the playing area (i.e off the bottom of the playing area), then the function also returns false.
 
 De volledige code tot op dit punt:
@@ -842,7 +841,7 @@ function love.load()
 end
 ```
 
-### Checking inert
+### Checking inert (D)
 If there is an inert block at any block's position, then the function also returns false.
 
 To test this, an inert block is manually set.
@@ -877,7 +876,7 @@ end
 
 ![het rooster](imgs/15.png)
 
-#### Simplifying code
+#### Simplifying code (D)
 The calculated block positions to test are reused, so they are stored in variables.
 
 De volledige code tot op dit punt:
@@ -908,7 +907,7 @@ function love.load()
 end
 ```
 
-### Drop
+### Drop (D)
 When the c key is pressed, the piece's Y position is increased by 1 while that position is movable.
 
 De volledige code tot op dit punt:
@@ -926,7 +925,7 @@ function love.keypressed(key)
 end
 ```
 
-### Resetting piece
+### Resetting piece (D)
 If the timer ticks and the piece can't move down, the piece is reset to its initial position and rotation, and (for now) its initial type.
 
 De volledige code tot op dit punt:
@@ -950,7 +949,7 @@ function love.update(dt)
 end
 ``` 
 
-### Simplifying code
+### Simplifying code (D)
 The piece is set to its initial state in two places, so a function is made.
 
 De volledige code tot op dit punt:
@@ -986,7 +985,7 @@ function love.update(dt)
 end
 ```
 
-### Creating the sequence of next pieces
+### Creating the sequence of next pieces (D)
 The sequence of next pieces is stored as a table containing the numbers representing piece types in a random order.
 
 Each number representing a piece type is looped through and inserted into the sequence at a random position from 1 (the first position) to 1 more than the number of piece types already in the sequence table (the last position).
@@ -1027,7 +1026,7 @@ end
 
 `3, 2, 4, 1, 7, 5, 6`
 
-### New piece from sequence
+### New piece from sequence (D)
 When a new piece is created, it removes the last item from the sequence and uses it for the piece type.
 
 When the sequence is empty, a new sequence is created.
@@ -1054,7 +1053,7 @@ function love.load()
     newPiece()
 end
 ```
-### Add to inert
+### Add to inert 
 When a piece has come to rest, the piece's blocks are added to the inert blocks.
 
 The piece's blocks are looped through, and if a block isn't empty, then the inert block at this position is set to the type of the piece's block.
@@ -1088,7 +1087,7 @@ function love.update(dt)
 end
 ```
 
-### New piece immediately after drop
+### New piece immediately after drop 
 When a piece is dropped, the timer is set immediately to the limit so that adding the piece to the inert pieces and creating the new piece happen immediately instead of waiting for the timer.
 
 The timer limit is reused, so it is made into a variable.
@@ -1124,7 +1123,7 @@ function love.keypressed(key)
 end
 ```
 
-### Finding complete rows
+### Finding complete rows 
 Each row of the inert blocks is looped through, and if none of the columns of the row contain an empty block, then the row is complete.
 
 For now, the complete row numbers are printed out.
