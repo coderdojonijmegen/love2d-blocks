@@ -78,16 +78,40 @@ De 7 verschillende stukken worden in een willekeurige volgorde aangeboden.
 
 ## Programmeren
 
-Verder uitwerken: waar Love downloaden, hoe installeren en gebruiken, bijvoorbeeld:
-* main.lua in <directory>
-* love.exe <directory>/
+Voor het programmeren zelf heb je alleen een editor zoals bijvoorbeeld Visual Studio Code nodig. Maar om het programma
+uit te voeren, heb je het Löve2D programma nodig. Deze kun je downloaden vanaf de site 
+[https://love2d.org/](https://love2d.org/).
+
+Als je Löve2D hebt geïnstalleerd, open je een terminal of cmd op Windows en zou je `love.exe` moeten kunnen starten.
+
+Bij het starten van het script is het belangrijk om te onthouden dat je de directory meegeeft aan Love en niet `main.lua`.  
+Dus:
+```bash
+love.exe blocks/
+```
+Hierbij bevat `blocks` het bestand `main.lua` waarin we de code schrijven van de volgende hoofdstukken.
+
+### Het venster tekenen
+
+We beginnen in een lege `conf.lua` met:
+
+```lua
+function love.conf(t)
+    t.window.width = 20 * 14
+    t.window.height = 20 * 25
+end
+```
+<sup>[conf.lua](blocks_wip/conf.lua)</sup>
+
+en een lege `main.lua`.
+
+Als je nu `love.exe blocks/` uitvoert, krijg je een leeg rechthoekig scherm.
 
 ### Het rooster tekenen
 
 Voor ieder blok in het speelveld wordt een vierkant getekend. 
 
-De volledige code tot op dit punt:
-
+Zet de volgende code in `main.lua`:
 ```lua
 function love.draw()
     for y = 1, 18 do
@@ -105,23 +129,31 @@ function love.draw()
     end
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_1)</sup>
 ![het rooster](imgs/6.png)
 
 ### Het rooster inkleuren
 
 De achtergrondkleur en de kleur van een leeg vak worden ingesteld.
 
-De volledige code tot op dit punt:
+Voeg functie `love.load()` toe aan `main.lua`, boven functie `love.draw()` die er al in staat:
 
 ```lua
 function love.load()
     love.graphics.setBackgroundColor(255, 255, 255)
 end
+```
+<sup>[main.lua](blocks_wip/main.lua_2)</sup>
+
+Pas nu functie `love.draw()` aan:
+```lua
 
 function love.draw()
     for y = 1, 18 do
         for x = 1, 10 do
+            -- voeg toe:
             love.graphics.setColor(.87, .87, .87)
+            
             local blockSize = 20
             local blockDrawSize = blockSize - 1
             love.graphics.rectangle(
@@ -135,6 +167,7 @@ function love.draw()
     end
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_3)</sup>
 ![het ingekleurde rooster](imgs/7.png)
 
 ### De gevallen blokken bewaren
@@ -145,12 +178,13 @@ dat het vak leeg is.
 We gaan de breedte en hoogte van het rooster gebruiken om de blokken te tekenen, dus we zetten de waarden 10 en 18 in 
 variabelen.
 
-De volledige code tot op dit punt:
+Pas de functies aan met:
 
 ```lua
 function love.load()
-    -- etc.
+    love.graphics.setBackgroundColor(255, 255, 255)
 
+    -- voeg onderstaande toe:
     gridXCount = 10
     gridYCount = 18
 
@@ -164,31 +198,34 @@ function love.load()
 end
 
 function love.draw()
+    -- vervang:
+    for y = 1, 18 do
+        for x = 1, 10 do
+
+    -- door:
     for y = 1, gridYCount do
         for x = 1, gridXCount do
-            -- etc.
-        end
-    end
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_4)</sup>
 
-### Setting block color
+### De kleur van de blokken
+
 De kleur van de blokken die we gaan tekenen wordt bepaald door het type. 
 
-Om dit testen zetten we verschillende typen blokken in het rooster.
-De types geven we aan met een letter: i,j,l,o.. etc. Vervolgens koppelen we een kleur aan elk type.
+Om dit testen, zetten we verschillende typen blokken in het rooster.  
+De types geven we aan met een letter: `i`, `j`, `l`, `o`.. etc. Vervolgens koppelen we een kleur aan elk type.  
 Bijvoorbeeld:
 
 ```lua
 i = {.47, .76, .94},
 ```
-De volledige code tot op dit punt:
+
+Maak de volgende aanpassingen:
 
 ```lua
 function love.load()
-    -- etc.
-
-    -- Temporary
+    -- voeg toe:
     inert[18][1] = 'i'
     inert[17][2] = 'j'
     inert[16][3] = 'l'
@@ -201,6 +238,9 @@ end
 function love.draw()
     for y = 1, gridYCount do
         for x = 1, gridXCount do
+            -- vervang:
+            love.graphics.setColor(.87, .87, .87)
+            -- door dit:
             local colors = {
                 [' '] = {.87, .87, .87},
                 i = {.47, .76, .94},
@@ -214,6 +254,7 @@ function love.draw()
             local block = inert[y][x]
             local color = colors[block]
             love.graphics.setColor(color)
+            -- tot hier toe.
 
             local blockSize = 20
             local blockDrawSize = blockSize - 1
@@ -228,10 +269,12 @@ function love.draw()
     end
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_5)</sup>
 ![het rooster met blokken in de verschillende kleuren](imgs/8.png)
 
-### Storing the piece structures
-Een puzzelstuk  bestaat uit verschillende blokken. We slaan de variaties van puzzelstuk op als een nieuw raster. 
+### De stukken opslaan
+
+Een puzzelstuk bestaat uit verschillende blokken. We slaan de variaties van puzzelstuk op als een nieuw raster. 
 In dit raster kunnen we ook de gedraaide versies van het puzzelstuk bewaren.
 
 ```lua
@@ -243,9 +286,10 @@ In dit raster kunnen we ook de gedraaide versies van het puzzelstuk bewaren.
 }
 ```
 Elk puzzelstuk kan 4 varianten hebben, want hij kan 4 kanten op gedraaid zijn.
-We slaan dus 4 varianten op voor elk puzzelstuk. in het geval van de rechte lijn zijn dit er eigenlijk maar 2. Deze vorm is namelijk symmetrisch over 1 as.
+We slaan dus 4 varianten op voor elk puzzelstuk. In het geval van de rechte lijn zijn dit er eigenlijk maar 2. 
+Deze vorm is namelijk symmetrisch over 1 as.
 De kubus heeft maar 1 variant. Deze is namelijk symmetrisch over 2 assen.
-De rechte lijn ziet er als volgt uit.
+De rechte lijn ziet er als volgt uit:
 
 ```lua
 {
@@ -264,162 +308,165 @@ De rechte lijn ziet er als volgt uit.
 }
 ```
 
-Dit zijn alle puzzelstukken:
-
-```lua
-pieceStructures = {
-    {
-        {
-            {' ', ' ', ' ', ' '},
-            {'i', 'i', 'i', 'i'},
-            {' ', ' ', ' ', ' '},
-            {' ', ' ', ' ', ' '},
-        },
-        {
-            {' ', 'i', ' ', ' '},
-            {' ', 'i', ' ', ' '},
-            {' ', 'i', ' ', ' '},
-            {' ', 'i', ' ', ' '},
-        },
-    },
-    {
-        {
-            {' ', ' ', ' ', ' '},
-            {' ', 'o', 'o', ' '},
-            {' ', 'o', 'o', ' '},
-            {' ', ' ', ' ', ' '},
-        },
-    },
-    {
-        {
-            {' ', ' ', ' ', ' '},
-            {'j', 'j', 'j', ' '},
-            {' ', ' ', 'j', ' '},
-            {' ', ' ', ' ', ' '},
-        },
-        {
-            {' ', 'j', ' ', ' '},
-            {' ', 'j', ' ', ' '},
-            {'j', 'j', ' ', ' '},
-            {' ', ' ', ' ', ' '},
-        },
-        {
-            {'j', ' ', ' ', ' '},
-            {'j', 'j', 'j', ' '},
-            {' ', ' ', ' ', ' '},
-            {' ', ' ', ' ', ' '},
-        },
-        {
-            {' ', 'j', 'j', ' '},
-            {' ', 'j', ' ', ' '},
-            {' ', 'j', ' ', ' '},
-            {' ', ' ', ' ', ' '},
-        },
-    },
-    {
-        {
-            {' ', ' ', ' ', ' '},
-            {'l', 'l', 'l', ' '},
-            {'l', ' ', ' ', ' '},
-            {' ', ' ', ' ', ' '},
-        },
-        {
-            {' ', 'l', ' ', ' '},
-            {' ', 'l', ' ', ' '},
-            {' ', 'l', 'l', ' '},
-            {' ', ' ', ' ', ' '},
-        },
-        {
-            {' ', ' ', 'l', ' '},
-            {'l', 'l', 'l', ' '},
-            {' ', ' ', ' ', ' '},
-            {' ', ' ', ' ', ' '},
-        },
-        {
-            {'l', 'l', ' ', ' '},
-            {' ', 'l', ' ', ' '},
-            {' ', 'l', ' ', ' '},
-            {' ', ' ', ' ', ' '},
-        },
-    },
-    {
-        {
-            {' ', ' ', ' ', ' '},
-            {'t', 't', 't', ' '},
-            {' ', 't', ' ', ' '},
-            {' ', ' ', ' ', ' '},
-        },
-        {
-            {' ', 't', ' ', ' '},
-            {' ', 't', 't', ' '},
-            {' ', 't', ' ', ' '},
-            {' ', ' ', ' ', ' '},
-        },
-        {
-            {' ', 't', ' ', ' '},
-            {'t', 't', 't', ' '},
-            {' ', ' ', ' ', ' '},
-            {' ', ' ', ' ', ' '},
-        },
-        {
-            {' ', 't', ' ', ' '},
-            {'t', 't', ' ', ' '},
-            {' ', 't', ' ', ' '},
-            {' ', ' ', ' ', ' '},
-        },
-    },
-    {
-        {
-            {' ', ' ', ' ', ' '},
-            {' ', 's', 's', ' '},
-            {'s', 's', ' ', ' '},
-            {' ', ' ', ' ', ' '},
-        },
-        {
-            {'s', ' ', ' ', ' '},
-            {'s', 's', ' ', ' '},
-            {' ', 's', ' ', ' '},
-            {' ', ' ', ' ', ' '},
-        },
-    },
-    {
-        {
-            {' ', ' ', ' ', ' '},
-            {'z', 'z', ' ', ' '},
-            {' ', 'z', 'z', ' '},
-            {' ', ' ', ' ', ' '},
-        },
-        {
-            {' ', 'z', ' ', ' '},
-            {'z', 'z', ' ', ' '},
-            {'z', ' ', ' ', ' '},
-            {' ', ' ', ' ', ' '},
-        },
-    },
-}
-```
-
-### Storing the current piece
-Er kan altijd maar een puzzelstuk tegelijkertijd vallen. We kunnen dit puzzelstuk opslaan met de variabele pieceType en pieceRotation.
-pieceType representeert welk stuk het is (lijn, blokje, etc). pieceRotation representeert hoe het stuk gedraait is.
+Dit zijn alle puzzelstukken; voeg deze boven aan het bestand toe:
 
 ```lua
 function love.load()
-    -- etc.
+    love.graphics.setBackgroundColor(255, 255, 255)
+    pieceStructures = {
+        {
+            {
+                {' ', ' ', ' ', ' '},
+                {'i', 'i', 'i', 'i'},
+                {' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' '},
+            },
+            {
+                {' ', 'i', ' ', ' '},
+                {' ', 'i', ' ', ' '},
+                {' ', 'i', ' ', ' '},
+                {' ', 'i', ' ', ' '},
+            },
+        },
+        {
+            {
+                {' ', ' ', ' ', ' '},
+                {' ', 'o', 'o', ' '},
+                {' ', 'o', 'o', ' '},
+                {' ', ' ', ' ', ' '},
+            },
+        },
+        {
+            {
+                {' ', ' ', ' ', ' '},
+                {'j', 'j', 'j', ' '},
+                {' ', ' ', 'j', ' '},
+                {' ', ' ', ' ', ' '},
+            },
+            {
+                {' ', 'j', ' ', ' '},
+                {' ', 'j', ' ', ' '},
+                {'j', 'j', ' ', ' '},
+                {' ', ' ', ' ', ' '},
+            },
+            {
+                {'j', ' ', ' ', ' '},
+                {'j', 'j', 'j', ' '},
+                {' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' '},
+            },
+            {
+                {' ', 'j', 'j', ' '},
+                {' ', 'j', ' ', ' '},
+                {' ', 'j', ' ', ' '},
+                {' ', ' ', ' ', ' '},
+            },
+        },
+        {
+            {
+                {' ', ' ', ' ', ' '},
+                {'l', 'l', 'l', ' '},
+                {'l', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' '},
+            },
+            {
+                {' ', 'l', ' ', ' '},
+                {' ', 'l', ' ', ' '},
+                {' ', 'l', 'l', ' '},
+                {' ', ' ', ' ', ' '},
+            },
+            {
+                {' ', ' ', 'l', ' '},
+                {'l', 'l', 'l', ' '},
+                {' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' '},
+            },
+            {
+                {'l', 'l', ' ', ' '},
+                {' ', 'l', ' ', ' '},
+                {' ', 'l', ' ', ' '},
+                {' ', ' ', ' ', ' '},
+            },
+        },
+        {
+            {
+                {' ', ' ', ' ', ' '},
+                {'t', 't', 't', ' '},
+                {' ', 't', ' ', ' '},
+                {' ', ' ', ' ', ' '},
+            },
+            {
+                {' ', 't', ' ', ' '},
+                {' ', 't', 't', ' '},
+                {' ', 't', ' ', ' '},
+                {' ', ' ', ' ', ' '},
+            },
+            {
+                {' ', 't', ' ', ' '},
+                {'t', 't', 't', ' '},
+                {' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' '},
+            },
+            {
+                {' ', 't', ' ', ' '},
+                {'t', 't', ' ', ' '},
+                {' ', 't', ' ', ' '},
+                {' ', ' ', ' ', ' '},
+            },
+        },
+        {
+            {
+                {' ', ' ', ' ', ' '},
+                {' ', 's', 's', ' '},
+                {'s', 's', ' ', ' '},
+                {' ', ' ', ' ', ' '},
+            },
+            {
+                {'s', ' ', ' ', ' '},
+                {'s', 's', ' ', ' '},
+                {' ', 's', ' ', ' '},
+                {' ', ' ', ' ', ' '},
+            },
+        },
+        {
+            {
+                {' ', ' ', ' ', ' '},
+                {'z', 'z', ' ', ' '},
+                {' ', 'z', 'z', ' '},
+                {' ', ' ', ' ', ' '},
+            },
+            {
+                {' ', 'z', ' ', ' '},
+                {'z', 'z', ' ', ' '},
+                {'z', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' '},
+            },
+        },
+    }
+```
+<sup>[main.lua](blocks_wip/main.lua_6)</sup>
 
+### Het vallende stuk opslaan
+Er kan altijd maar een puzzelstuk tegelijkertijd vallen. We kunnen dit puzzelstuk opslaan met de variabelen `pieceType`
+en `pieceRotation`. `pieceType` bevat welk stuk het is (lijn, blokje, etc). `pieceRotation` bevat hoe het stuk gedraaid is.
+
+```lua
+function love.load()
+    -- voeg toe aan het einde van de functie:
     pieceType = 1
     pieceRotation = 1
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_7)</sup>
 
-### Drawing the piece
-Elk puzzelstuk wordt getekent door door het raster heen te gaan en de blokken een voor een te tekenen. De kleur is afhankelijk van het blok type.
-De volledige code tot op dit punt:
+### Het stuk tekenen
+Elk puzzelstuk wordt getekend door langs elk vakje in het rooster te gaan en de blokken een voor een in te kleuren.  
+De kleur is afhankelijk van het type blok.  
 
 ```lua
 function love.draw()
-    -- etc.
 
+    -- voeg dit hele stuk code toe onderaan deze functie
     for y = 1, 4 do
         for x = 1, 4 do
             local block = pieceStructures[pieceType][pieceRotation][y][x]
@@ -450,14 +497,27 @@ function love.draw()
     end
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_8)</sup>
+
+En verwijder dit stuk uit functie `love.load()`:
+```lua
+    inert[18][1] = 'i'
+    inert[17][2] = 'j'
+    inert[16][3] = 'l'
+    inert[15][4] = 'o'
+    inert[14][5] = 's'
+    inert[13][6] = 't'
+    inert[12][7] = 'z'
+```
+<sup>[main.lua](blocks_wip/main.lua_9)</sup>
 
 ![het rooster](imgs/9.png)
 
-### Simplifying code
-De code voor het tekenen van een stilstaand blok lijkt erg op de code voor het tekenen van een vallend blok. We voegen daarom de functie drawBlock toe. 
+### De code vereenvoudigen
+De code voor het tekenen van een stilstaand blok lijkt erg op de code voor het tekenen van een vallend blok.
+We voegen daarom de functie `drawBlock` toe en verplaatsen de code in de twee for-loops er naartoe.
 
-De volledige code tot op dit punt:
-
+Vervang alle code in `love.draw()` met deze code:
 ```lua
 function love.draw()
     local function drawBlock(block, x, y)
@@ -501,16 +561,21 @@ function love.draw()
     end
 end
 ```
-### Rotation
-Wanneer we op de x toets drukken willen wat dat het stuk draait. Dit doen we door het rotation getal op te hogen met 1.
+<sup>[main.lua](blocks_wip/main.lua_10)</sup>
+
+### Het stuk draaien
+Wanneer we op de x-toets drukken willen wat dat het stuk draait. 
+
+`pieceRotation` bevat een getal dat de draaiing aangeeft. 1 is geen draaiing, 2 is 90&deg; met de klok mee en 3 is 180&deg;. 
 
 Als het rotation getal hoger is dan de verschillende draai posities (4, 2 of 1). Dan wordt het getal terug gezet naar 1.
 
-Als we op z drukken willen we dat het het stuk de andere kant op draait. Dit doen we door 1 af te trekken van het rotation getal.
+Als we op z-toets drukken willen we dat het het stuk de andere kant op draait. Dit doen we door de waarde in
+`pieceRotation` met 1 te verlagen.
 
 Als het getal lager wordt dan 0. Zetten we het weer terug naar 1.
 
-De volledige code tot op dit punt:
+Voeg dit stuk code toe onderaan het bestand:
 
 ```lua
 function love.keypressed(key)
@@ -528,6 +593,7 @@ function love.keypressed(key)
     end
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_11)</sup>
 
 ![het rooster](imgs/10.png)
 
