@@ -144,22 +144,6 @@ function love.load()
 
     pieceType = 1
     pieceRotation = 1
-    pieceX = 3
-    pieceY = 0
-    timer = 0
-
-    function canPieceMove(testX, testY, testRotation)
-        for y = 1, 4 do
-            for x = 1, 4 do
-                if pieceStructures[pieceType][testRotation][y][x] ~= ' '
-                and (testX + x) < 1 then
-                    return false
-                end
-            end
-        end
-
-        return true
-    end
 end
 
 function love.draw()
@@ -198,7 +182,7 @@ function love.draw()
         for x = 1, 4 do
             local block = pieceStructures[pieceType][pieceRotation][y][x]
             if block ~= ' ' then
-                drawBlock(block, x + pieceX, y + pieceY)
+                drawBlock(block, x, y)
             end
         end
     end
@@ -210,33 +194,26 @@ function love.keypressed(key)
         if pieceRotation > #pieceStructures[pieceType] then
             pieceRotation = 1
         end
+
     elseif key == 'z' then
         pieceRotation = pieceRotation - 1
         if pieceRotation < 1 then
             pieceRotation = #pieceStructures[pieceType]
         end
-    elseif key == 'left' then
-        local testX = pieceX - 1
 
-        if canPieceMove(testX, pieceY, pieceRotation) then
-            pieceX = testX
+    -- tijdelijk
+    elseif key == 'down' then
+        pieceType = pieceType + 1
+        if pieceType > #pieceStructures then
+            pieceType = 1
         end
-    elseif key == 'right' then
-        local testX = pieceX + 1
-
-        if canPieceMove(testX, pieceY, pieceRotation) then
-            pieceX = testX
+        pieceRotation = 1
+    elseif key == 'up' then
+        pieceType = pieceType - 1
+        if pieceType < 1 then
+            pieceType = #pieceStructures
         end
+        pieceRotation = 1
     end
-end
-
-function love.update(dt)
-    timer = timer + dt
-    if timer >= 0.5 then
-        timer = 0
-        local testY = pieceY + 1
-        if canPieceMove(pieceX, testY, pieceRotation) then
-            pieceY = testY
-        end
-    end
+    -- tijdelijk
 end
