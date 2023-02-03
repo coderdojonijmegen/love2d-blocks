@@ -732,7 +732,7 @@ end
 
 ![het rooster](imgs/14.png)
 
-### Confining movement (D)
+### Confining movement
 We willen voorkomen dat de puzzelstukken links of rechts van het scherm af kunnen bewegen. Daarom checken we altijd eerst of alle blokken nog wel in het speelveld zijn.
 
 We wilen deze check vaker uitvoeren, daarom stoppen we het in een functie. Dan kunnen we het makkelijk herbruiken. De functie heeft de positie en rotatie nodig. De functie geeft true of false terug om aan te geven of we mogen bewegen of draaien.
@@ -797,7 +797,7 @@ end
 ``` 
 <sup>[main.lua](blocks_wip/main.lua_17)</sup>  
 
-### Checking left of playing area (D)
+### Checking left of playing area
 We beginnen met links checken. Als het blok niet leeg is, en de x positie lager is dan 1, geeft de functie false terug. 
 
 De volledige code tot op dit punt:
@@ -822,8 +822,8 @@ end
 ```
 <sup>[main.lua](blocks_wip/main.lua_18)</sup>  
 
-### Simplifying code (D)
-The number of blocks each piece has on the X and Y axes are reused from drawing the pieces, so variables are made for them.
+### Simplifying code
+Het aantal blokken van elk puzzelstuk op de X en Y worden herbruikt uit het tekenen. We stoppen deze waardes in variabelen.
 
 De volledige code tot op dit punt:
 
@@ -866,8 +866,8 @@ end
 ```
 <sup>[main.lua](blocks_wip/main.lua_19)</sup>  
 
-### Checking right of playing area (D)
-If any block's X position is greater than the width of the playing area (i.e. off the right of the playing area), then the function also returns false.
+### Checking right of playing area 
+We gaan nu rechts checken. Als het blok niet leeg is, en de x positie groter is dan het grid, geeft de functie false terug. 
 
 De volledige code tot op dit punt:
 
@@ -898,8 +898,8 @@ end
 ```
 <sup>[main.lua](blocks_wip/main.lua_20)</sup>  
 
-### Checking bottom of playing area (D)
-If any block's Y position is greater than the height of the playing area (i.e off the bottom of the playing area), then the function also returns false.
+### Checking bottom of playing area
+Het puzzelstuk moet stoppen als het de onderkant aanraak. Als de onderkant van het puzzelstuk lager is dan de onderkant van het veld geeft de functie false terug. 
 
 De volledige code tot op dit punt:
 
@@ -935,10 +935,10 @@ end
 ```
 <sup>[main.lua](blocks_wip/main.lua_21)</sup>  
 
-### Checking inert (D)
-If there is an inert block at any block's position, then the function also returns false.
+### Checking inert 
+Als er al een ander puzzelstuk is, kan het puzzelstuk daar niet naartoe bewegen. Daarom checken we of er al een blok is op die plek. Als dat zo is geeft de functie ook false terug.
 
-To test this, an inert block is manually set.
+We testen dit door zelf een blokje op het speeldveld te zetten.
 
 De volledige code tot op dit punt:
 
@@ -985,8 +985,8 @@ Verwijder na het testen de tijdelijke code.
 
 ![het rooster](imgs/15.png)
 
-#### Simplifying code (D)
-The calculated block positions to test are reused, so they are stored in variables.
+#### Simplifying code
+De blok posities die we testen kunnen we herbruiken. We stoppen deze in variabelen.
 
 De volledige code tot op dit punt:
 
@@ -1031,8 +1031,8 @@ end
 ```
 <sup>[main.lua](blocks_wip/main.lua_23)</sup>  
 
-### Drop (D)
-When the c key is pressed, the piece's Y position is increased by 1 while that position is movable.
+### Drop 
+Als de speler c indrukt laten we het puzzelstuk snel vallen. Zolang c is ingedrukt verhogen we de Y positie met 1 totdat het puzzelstuk iets raakt.
 
 De volledige code tot op dit punt:
 
@@ -1049,8 +1049,8 @@ end
 ```
 <sup>[main.lua](blocks_wip/main.lua_24)</sup>  
 
-### Resetting piece (D)
-If the timer ticks and the piece can't move down, the piece is reset to its initial position and rotation, and (for now) its initial type.
+### Resetting piece
+Als de timer tikt, en het puzzelstuk niet verder kan bewegen, resetten we de positie en rotatie en type.
 
 De volledige code tot op dit punt:
 
@@ -1079,8 +1079,8 @@ end
 ``` 
 <sup>[main.lua](blocks_wip/main.lua_25)</sup>  
 
-### Simplifying code (D)
-The piece is set to its initial state in two places, so a function is made.
+### Simplifying code 
+We resetten het puzzelstuk vaker, dus we stoppen de code in een functie om her te gebruiken.
 
 De volledige code tot op dit punt:
 
@@ -1121,12 +1121,12 @@ end
 ```
 <sup>[main.lua](blocks_wip/main.lua_26)</sup>  
 
-### Creating the sequence of next pieces (D)
-The sequence of next pieces is stored as a table containing the numbers representing piece types in a random order.
+### Creating the sequence of next pieces
+We maken nu een sequence (volgorde) waarin de puzzelstukken gaan vallen. We slaan deze op als een tabel met getallen die aangeven welk puzzelstuk het is. 
 
-Each number representing a piece type is looped through and inserted into the sequence at a random position from 1 (the first position) to 1 more than the number of piece types already in the sequence table (the last position).
+We stoppen alle verschillende nummers/puzzelstuk types in de tabel op een willekeurige positie. 
 
-To test this, a new sequence is created when the s key is pressed, and the sequence is printed.
+We testen dit door een sequence te maken en te printen als je op s drukt
 
 De volledige code tot op dit punt:
 
@@ -1166,7 +1166,7 @@ Resultaat van drukken op knop "s" in tijdelijke code:
 
 Verwijder de tijdelijke code na het testen.
 
-### New piece from sequence (D)
+### New piece from sequence 
 Wanneer er een nieuw puzzelstuk wordt gemaakt, halen we de vorige uit de sequence en herbruiken we het. 
 
 Als de sequence leeg, is maken we een nieuwe.
