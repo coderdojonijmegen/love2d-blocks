@@ -852,7 +852,7 @@ function love.draw()
     -- vervang:
     for y = 1, 4 do
         for x = 1, 4 do
-    -- met:    
+    -- door:    
     for y = 1, pieceYCount do
         for x = 1, pieceXCount do
     --
@@ -877,12 +877,12 @@ function love.load()
     function canPieceMove(testX, testY, testRotation)
         for y = 1, pieceYCount do
             for x = 1, pieceXCount do
-                -- replace
+                -- vervang
                 if pieceStructures[pieceType][testRotation][y][x] ~= ' '
                         and (testX + x) < 1 then
                     return false
                 end
-                -- by:
+                -- door:
                 if pieceStructures[pieceType][testRotation][y][x] ~= ' ' and 
                     ((testX + x) < 1 or (testX + x) > gridXCount)
                 then
@@ -909,13 +909,13 @@ function love.load()
     function canPieceMove(testX, testY, testRotation)
         for y = 1, pieceYCount do
             for x = 1, pieceXCount do
-                -- replace:
+                -- vervang:
                 if pieceStructures[pieceType][testRotation][y][x] ~= ' ' and 
                     ((testX + x) < 1 or (testX + x) > gridXCount)
                 then
                     return false
                 end
-                -- by:
+                -- door:
                 if pieceStructures[pieceType][testRotation][y][x] ~= ' ' and 
                     (
                         (testX + x) < 1
@@ -949,13 +949,13 @@ function love.load()
         for y = 1, pieceYCount do
             for x = 1, pieceXCount do
                 if pieceStructures[pieceType][testRotation][y][x] ~= ' ' and
-                    -- replace: 
+                    -- vervang: 
                     (
                         (testX + x) < 1
                         or (testX + x) > gridXCount
                         or (testY + y) > gridYCount
                     ) 
-                    -- by:
+                    -- door:
                     (
                         (testX + x) < 1
                         or (testX + x) > gridXCount
@@ -1313,7 +1313,7 @@ function love.update(dt)
                     end
                 end
             end
-            -- voeg to:            
+            -- voeg toe:            
             for y = 1, gridYCount do
                 local complete = true
                 for x = 1, gridXCount do
@@ -1475,7 +1475,7 @@ function love.draw()
 ```
 
 ```lua
-    -- voeg to aan het eind van de functie
+    -- voeg toe aan het eind van de functie
     for y = 1, pieceYCount do
         for x = 1, pieceXCount do
             local block = pieceStructures[sequence[#sequence]][1][y][x]
