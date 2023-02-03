@@ -520,7 +520,7 @@ En verwijder dit stuk uit functie `love.load()`:
 
 ![het rooster](imgs/9.png)
 
-### De code vereenvoudigen
+#### Code vereenvoudigen
 De code voor het tekenen van een stilstaand blok lijkt erg op de code voor het tekenen van een vallend blok.
 We voegen daarom de functie `drawBlock` toe en verplaatsen de code in de twee for-loops er naartoe.
 
@@ -732,16 +732,17 @@ end
 
 ![het rooster](imgs/14.png)
 
-### Confining movement
-We willen voorkomen dat de puzzelstukken links of rechts van het scherm af kunnen bewegen. Daarom checken we altijd eerst of alle blokken nog wel in het speelveld zijn.
+### Linker, rechter en onderrand van het rooster
+We willen voorkomen dat de puzzelstukken links of rechts van het scherm af kunnen bewegen. Daarom checken we altijd 
+eerst of alle blokken nog wel in het speelveld zijn.
 
-We wilen deze check vaker uitvoeren, daarom stoppen we het in een functie. Dan kunnen we het makkelijk herbruiken. De functie heeft de positie en rotatie nodig. De functie geeft true of false terug om aan te geven of we mogen bewegen of draaien.
+We willen deze check vaker uitvoeren, daarom stoppen we het in een functie. Dan kunnen we het makkelijk herbruiken. 
+De functie heeft de positie en rotatie nodig. De functie geeft `true` of `false` terug om aan te geven of we mogen bewegen of draaien.
 
-We noemen de functie: canpieceMove(testX, testY, testRotation). Voor nu zal de functie alleen true returnen, dan kunnen we namelijk de functie in de rest van de code verwerken.
+We noemen de functie: `canpieceMove(testX, testY, testRotation)`. Voor nu zal de functie alleen `true` teruggeven, 
+dan kunnen we namelijk de functie in de rest van de code verwerken.
 
-We passen de code aan zodat de check functie eerst wordt uitgevoerd voordat we bewegen of draaien.
-
-De volledige code tot op dit punt:
+We passen de code aan zodat de check functie eerst wordt uitgevoerd, voordat we bewegen of draaien.
 
 ```lua
 function love.load()
@@ -797,10 +798,9 @@ end
 ``` 
 <sup>[main.lua](blocks_wip/main.lua_17)</sup>  
 
-### Checking left of playing area
-We beginnen met links checken. Als het blok niet leeg is, en de x positie lager is dan 1, geeft de functie false terug. 
+#### Links
+We beginnen met links checken. Als het blok niet leeg is, en de `x` positie lager is dan 1, geeft de functie `false` terug. 
 
-De volledige code tot op dit punt:
 
 ```lua
 function love.load()
@@ -822,10 +822,8 @@ end
 ```
 <sup>[main.lua](blocks_wip/main.lua_18)</sup>  
 
-### Simplifying code
+#### Code vereenvoudigen
 Het aantal blokken van elk puzzelstuk op de X en Y worden herbruikt uit het tekenen. We stoppen deze waardes in variabelen.
-
-De volledige code tot op dit punt:
 
 ```lua
 function love.load()
@@ -866,10 +864,8 @@ end
 ```
 <sup>[main.lua](blocks_wip/main.lua_19)</sup>  
 
-### Checking right of playing area 
-We gaan nu rechts checken. Als het blok niet leeg is, en de x positie groter is dan het grid, geeft de functie false terug. 
-
-De volledige code tot op dit punt:
+#### Rechts 
+We gaan nu rechts checken. Als het blok niet leeg is, en de `x` positie groter is dan het grid, geeft de functie `false` terug. 
 
 ```lua
 function love.load()
@@ -898,10 +894,10 @@ end
 ```
 <sup>[main.lua](blocks_wip/main.lua_20)</sup>  
 
-### Checking bottom of playing area
-Het puzzelstuk moet stoppen als het de onderkant aanraak. Als de onderkant van het puzzelstuk lager is dan de onderkant van het veld geeft de functie false terug. 
+#### Onderkant
+Het puzzelstuk moet stoppen als het de onderkant aanraak. Als de onderkant van het puzzelstuk lager is dan de onderkant 
+van het veld geeft de functie `false` terug. 
 
-De volledige code tot op dit punt:
 
 ```lua
 function love.load()
@@ -935,12 +931,11 @@ end
 ```
 <sup>[main.lua](blocks_wip/main.lua_21)</sup>  
 
-### Checking inert 
-Als er al een ander puzzelstuk is, kan het puzzelstuk daar niet naartoe bewegen. Daarom checken we of er al een blok is op die plek. Als dat zo is geeft de functie ook false terug.
+### Controle op botsingen 
+Als er al een ander puzzelstuk is, kan het puzzelstuk daar niet naartoe bewegen. Daarom checken we of er al een blok is 
+op die plek. Als dat zo is, geeft de functie ook `false` terug.
 
-We testen dit door zelf een blokje op het speeldveld te zetten.
-
-De volledige code tot op dit punt:
+We testen dit door zelf een blokje op het rooster te zetten.
 
 ```lua
 function love.load()
@@ -985,10 +980,9 @@ Verwijder na het testen de tijdelijke code.
 
 ![het rooster](imgs/15.png)
 
-#### Simplifying code
-De blok posities die we testen kunnen we herbruiken. We stoppen deze in variabelen.
+#### Code vereenvoudigen
 
-De volledige code tot op dit punt:
+De posities van de blokken die we testen kunnen we herbruiken. We stoppen deze in variabelen.
 
 ```lua
 function love.load()
@@ -1031,10 +1025,9 @@ end
 ```
 <sup>[main.lua](blocks_wip/main.lua_23)</sup>  
 
-### Drop 
-Als de speler c indrukt laten we het puzzelstuk snel vallen. Zolang c is ingedrukt verhogen we de Y positie met 1 totdat het puzzelstuk iets raakt.
-
-De volledige code tot op dit punt:
+### Sneller vallen 
+Als de speler c indrukt laten we het puzzelstuk snel vallen. Zolang c is ingedrukt verhogen we de Y positie met 1 
+totdat het puzzelstuk iets raakt.
 
 ```lua
 function love.keypressed(key)
@@ -1049,10 +1042,8 @@ end
 ```
 <sup>[main.lua](blocks_wip/main.lua_24)</sup>  
 
-### Resetting piece
+### Een stuk terugzetten
 Als de timer tikt, en het puzzelstuk niet verder kan bewegen, resetten we de positie en rotatie en type.
-
-De volledige code tot op dit punt:
 
 ```lua
 function love.update(dt)
@@ -1079,10 +1070,8 @@ end
 ``` 
 <sup>[main.lua](blocks_wip/main.lua_25)</sup>  
 
-### Simplifying code 
+#### Code vereenvoudigen
 We resetten het puzzelstuk vaker, dus we stoppen de code in een functie om her te gebruiken.
-
-De volledige code tot op dit punt:
 
 ```lua
 function love.load()
@@ -1121,14 +1110,14 @@ end
 ```
 <sup>[main.lua](blocks_wip/main.lua_26)</sup>  
 
-### Creating the sequence of next pieces
-We maken nu een sequence (volgorde) waarin de puzzelstukken gaan vallen. We slaan deze op als een tabel met getallen die aangeven welk puzzelstuk het is. 
+### Een reeks met volgende stukken
+
+We maken nu een sequence (volgorde) waarin de puzzelstukken gaan vallen. We slaan deze op als een tabel met getallen 
+die aangeven welk puzzelstuk het is. 
 
 We stoppen alle verschillende nummers/puzzelstuk types in de tabel op een willekeurige positie. 
 
-We testen dit door een sequence te maken en te printen als je op s drukt
-
-De volledige code tot op dit punt:
+We testen dit door een reeks te maken en te printen als je op `s` drukt
 
 ```lua
 function love.load()
@@ -1160,19 +1149,18 @@ end
 ```
 <sup>[main.lua](blocks_wip/main.lua_27)</sup>  
 
-Resultaat van drukken op knop "s" in tijdelijke code:
+Resultaat van drukken op knop `s` in tijdelijke code:
 
 `3, 2, 4, 1, 7, 5, 6`
 
 Verwijder de tijdelijke code na het testen.
 
-### New piece from sequence 
-Wanneer er een nieuw puzzelstuk wordt gemaakt, halen we de vorige uit de sequence en herbruiken we het. 
+### Een nieuw stuk uit de reeks
+Wanneer er een nieuw puzzelstuk wordt gemaakt, halen we de vorige uit de reeks en herbruiken we het. 
 
-Als de sequence leeg, is maken we een nieuwe.
+Als de reeks leeg is, is maken we een nieuwe.
 
-We verplaatsen de newPiece functie naar onder de newSequence functie.
-De volledige code tot op dit punt:
+We verplaatsen de `newPiece` functie naar onder de `newSequence` functie.
 
 ```lua
 function love.load()
@@ -1201,12 +1189,11 @@ end
 ```
 <sup>[main.lua](blocks_wip/main.lua_28)</sup>  
 
-### Add to inert 
-When a piece has come to rest, the piece's blocks are added to the inert blocks.
+### Gevallen stukken bewaren
 
-The piece's blocks are looped through, and if a block isn't empty, then the inert block at this position is set to the type of the piece's block.
+Als een stuk is gevallen, worden ze apart gezet en bewaard.
 
-De volledige code tot op dit punt:
+Elk blok in het stuk wordt bekeken en als het niet leeg is, wordt het blok als bezet gezet.
 
 ```lua
 function love.update(dt)
@@ -1236,12 +1223,9 @@ end
 ```
 <sup>[main.lua](blocks_wip/main.lua_29)</sup>  
 
-### New piece immediately after drop 
-When a piece is dropped, the timer is set immediately to the limit so that adding the piece to the inert pieces and creating the new piece happen immediately instead of waiting for the timer.
+### Een nieuw stuk direct na landing vorige
 
-The timer limit is reused, so it is made into a variable.
-
-De volledige code tot op dit punt:
+Als een stuk is gevallen, wordt de timer direct opnieuw ingesteld, zodat een volgende stuk direct wordt gemaakt.
 
 ```lua
 function love.load()
@@ -1287,12 +1271,11 @@ end
 <sup>[main.lua](blocks_wip/main.lua_30)</sup>  
 
 
-### Finding complete rows 
-Each row of the inert blocks is looped through, and if none of the columns of the row contain an empty block, then the row is complete.
+### Volle rijen vinden
 
-For now, the complete row numbers are printed out.
+Elke rij wordt gecontroleerd. Als er geen legen blokken in de rij zijn, is de rij compleet.
 
-De volledige code tot op dit punt:
+Om te controleren of het werkt worden complete rijen geprint naar de console.
 
 ```lua
 function love.update(dt)
@@ -1338,7 +1321,10 @@ end
 <sup>[main.lua](blocks_wip/main.lua_31)</sup>  
 
 
-### Removing complete rows
+### Volle rijen verwijderen
+
+Als een rij compleet is, 
+
 If the row is complete, the rows from the complete row to the row second from the top are looped through.
 
 Each block in the row is looped through and set to the value of the block above it. Because there is nothing above the top row it doesn't need to be looped through.
@@ -1384,11 +1370,10 @@ end
 <sup>[main.lua](blocks_wip/main.lua_32)</sup>  
 
 ### Game over
-If a newly created piece is in an unmovable position, then the game is over.
 
-For now, love.load is called to reset the game to its initial state.
+Als een nieuw stuk meteen niet meer verplaatst kan worden omdat er andere blokken in de weg staan, is het spel over.
 
-De volledige code tot op dit punt:
+`love.load` wordt aangeroepen om het spel opnieuw te starten.
 
 ```lua
 function love.update(dt)
@@ -1403,10 +1388,10 @@ end
 ```
 <sup>[main.lua](blocks_wip/main.lua_33)</sup>  
 
-### Offsetting the playing area
-The playing area is drawn 2 blocks from the left of the screen and 5 blocks from the top of the screen.
+### Het rooster verplaatsen in het window
 
-De volledige code tot op dit punt:
+Tot nu toe is het rooster aan de linker boven kant van het venster getekend. We gaan het nu in het midden een stukje van
+de bovenrand van het venster zetten.
 
 ```lua
 function love.draw()
@@ -1450,10 +1435,9 @@ end
 
 ![het rooster](imgs/16.png)
 
-### Drawing the upcoming piece
-The last piece of the sequence (i.e. the next piece to fall) is drawn at its first rotation position. It is offset 5 blocks from the left and 1 block from the top.
+### Het volgende stuk
 
-De volledige code tot op dit punt:
+Het volgende stuk uit de reeks dat gaat vallen, wordt boven het rooster getekend. 
 
 ```lua
 function love.draw()
@@ -1491,10 +1475,10 @@ end
 
 ![het rooster](imgs/17.png)
 
-### Resetting the game
-When the game is over, only some of the variables need to be reset, so a function is made.
+### Het spel herstarten
 
-De volledige code tot op dit punt:
+Als het spel is afgelopen, wordt het herstart. Daarvoor moeten wat variabelen opnieuw worden ingesteld.  
+De code hierovor zetten we in een functie.
 
 ```lua
 function love.load()
