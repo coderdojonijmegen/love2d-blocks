@@ -597,24 +597,20 @@ end
 
 ![het rooster](imgs/10.png)
 
-### Testing pieces
-We willen graag de code testen. Daarom voegen we toe dat we het puzzelstuk kunnen veranderen met de omhoog en omlaag pijltjestoetsen. 
+### De stukken testen
 
-De volledige code tot op dit punt:
+We willen graag de code testen. Daarom voegen we toe dat we het puzzelstuk kunnen veranderen met de omhoog en omlaag pijltjestoetsen.   
+De tijdelijke code onderaan functie `love.keypressed(key)`:
 
 ```lua
 function love.keypressed(key)
-    -- etc.
-
-    -- Temporary
+    -- vervang laatste twee "end" regels met onderstaande tijdelijke code:
     elseif key == 'down' then
         pieceType = pieceType + 1
         if pieceType > #pieceStructures then
             pieceType = 1
         end
         pieceRotation = 1
-
-    -- Temporary
     elseif key == 'up' then
         pieceType = pieceType - 1
         if pieceType < 1 then
@@ -624,99 +620,106 @@ function love.keypressed(key)
     end
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_12)</sup>
 
 ![het rooster](imgs/11.png)
+Als je hebt gezien dat de stukken veranderen, kun je de net toegevoegde code weer verwijderen.
 
-### Setting piece position
-We bewaren de positie van het puzzelstuk op in het veld, en we tekenen het puzzelstuk op die positie.
+### De positie van het vallende stuk bijhouden
 
-De volledige code tot op dit punt:
+We bewaren de positie van het vallende puzzelstuk op in het rooster en we tekenen het puzzelstuk op die positie.
 
 ```lua
 function love.load()
-    -- etc.
-
+    -- voeg deze regels toe onderaan deze functie
     pieceX = 3
     pieceY = 0
 end
+```
 
+En het tekenen van het blok op de juiste positie:
+```lua
 function love.draw()
-    -- etc.
-
-    for y = 1, 4 do
-        for x = 1, 4 do
-            local block = pieceStructures[pieceType][pieceRotation][y][x]
-            if block ~= ' ' then
+    -- vervang:
+                drawBlock(block, x, y)
+                
+    -- met:
                 drawBlock(block, x + pieceX, y + pieceY)
-            end
-        end
-    end
+    --
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_13)</sup>
 
 ![het rooster](imgs/12.png)
 
-### Moving the piece
-We gaan nu de linker en rechter pijltjestoetsen gebruiken om het puzzelstuk te verplaatsen. 
-De volledige code tot op dit punt:
+### Het stuk verplaatsen
+
+We gaan nu de linker en rechter pijltjestoetsen gebruiken om het stuk te verplaatsen. 
+
+Voeg de volgende regels toe onderaan `love.keypressed(key)`:
 
 ```lua
 function love.keypressed(key)
-    -- etc.
-
+    -- vervang de een na laatste "end" met: 
     elseif key == 'left' then
         pieceX = pieceX - 1
 
     elseif key == 'right' then
         pieceX = pieceX + 1
-
-    -- etc.
+    end
+    --
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_14)</sup>
 
 ![het rooster](imgs/13.png)
 
 ### Timer
 We willen dat elke 0.5 seconden het puzzelstuk valt.
 
-We maken daarom een timer variabele, die we steeds met dt (delta time: de tijd die verstreken is) verhogen.
+We maken daarom een `timer` variabele, die we steeds met `dt` (delta time: de tijd die verstreken is) verhogen.
 
-When the timer is at or above 0.5 it is reset to 0.
-Wanneer de timer boven de 0.5 komt, resetten we de timer terug naar 0.
-
-De volledige code tot op dit punt:
+Als de waarde van `timer` gelijk aan 0.5 of hoger is, zetten we het terug naar 0.  
 
 ```lua
 function love.load()
-    -- etc.
-
+    -- onderaan deze functie:
     timer = 0
+    --
 end
-
+```
+En een nieuwe functie onderaan het bestand:
+```lua
 function love.update(dt)
     timer = timer + dt
     if timer >= 0.5 then
         timer = 0
-        -- Temporary
+        -- tijdelijk; kijk naar de console/cmd window voor een tick elke halve seconde
         print('tick')
+        --
     end
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_15)</sup>  
+Na het testen mag je `print('tick')` weer weghalen.
 
-### Falling
-We gebruiken de timer om het stuk elke 0.5 seconden verdner aar beneden te laten vallen. 
+### Stukken vallen
 
-De volledige code tot op dit punt:
+We gebruiken de timer om het stuk elke 0.5 seconden verder naar beneden te laten vallen.   
+De waarde van `pieceY` wordt met 1 verhoogd om het stuk 1 regel lager te tekenen:
 
 ```lua
 function love.update(dt)
     timer = timer + dt
     if timer >= 0.5 then
         timer = 0
+        -- voeg toe:
         pieceY = pieceY + 1
+        --
     end
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_16)</sup>  
 
 ![het rooster](imgs/14.png)
 
@@ -733,11 +736,11 @@ De volledige code tot op dit punt:
 
 ```lua
 function love.load()
-    -- etc.
-
+    -- voeg aan het einde van de functie toe:
     function canPieceMove(testX, testY, testRotation)
         return true
     end
+    --
 end
 
 function love.update(dt)
@@ -745,50 +748,45 @@ function love.update(dt)
     if timer >= 0.5 then
         timer = 0
 
+        -- vervang:
+        pieceY = pieceY + 1
+        
+        -- door:
         local testY = pieceY + 1
         if canPieceMove(pieceX, testY, pieceRotation) then
             pieceY = testY
         end
+        --
     end
 end
 
 function love.keypressed(key)
-    if key == 'x' then
-        local testRotation = pieceRotation + 1
-        if testRotation > #pieceStructures[pieceType] then
-            testRotation = 1
-        end
-
-        if canPieceMove(pieceX, pieceY, testRotation) then
-            pieceRotation = testRotation
-        end
-
-    elseif key == 'z' then
-        local testRotation = pieceRotation - 1
-        if testRotation < 1 then
-            testRotation = #pieceStructures[pieceType]
-        end
-
-        if canPieceMove(pieceX, pieceY, testRotation) then
-            pieceRotation = testRotation
-        end
-
     elseif key == 'left' then
+        -- vervang:
+        pieceX = pieceX - 1
+        
+        -- door:
         local testX = pieceX - 1
 
         if canPieceMove(testX, pieceY, pieceRotation) then
             pieceX = testX
         end
-
+        --
     elseif key == 'right' then
+        -- vervang:
+        pieceX = pieceX + 1
+
+        -- door:        
         local testX = pieceX + 1
 
         if canPieceMove(testX, pieceY, pieceRotation) then
             pieceX = testX
         end
+        --
     end
 end
 ``` 
+<sup>[main.lua](blocks_wip/main.lua_17)</sup>  
 
 ### Checking left of playing area (D)
 We beginnen met links checken. Als het blok niet leeg is, en de x positie lager is dan 1, geeft de functie false terug. 
@@ -797,13 +795,12 @@ De volledige code tot op dit punt:
 
 ```lua
 function love.load()
-    -- etc.
-
+    -- vervang functie canPieceMove in zijn geheel door:
     function canPieceMove(testX, testY, testRotation)
         for y = 1, 4 do
             for x = 1, 4 do
                 if pieceStructures[pieceType][testRotation][y][x] ~= ' '
-                and (testX + x) < 1 then
+                        and (testX + x) < 1 then
                     return false
                 end
             end
@@ -811,8 +808,10 @@ function love.load()
 
         return true
     end
+    --
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_18)</sup>  
 
 ### Simplifying code (D)
 The number of blocks each piece has on the X and Y axes are reused from drawing the pieces, so variables are made for them.
@@ -821,8 +820,7 @@ De volledige code tot op dit punt:
 
 ```lua
 function love.load()
-    -- etc.
-
+    -- vervang functie canPieceMove weer, maar nu in zijn geheel door:
     pieceXCount = 4
     pieceYCount = 4
 
@@ -830,7 +828,7 @@ function love.load()
         for y = 1, pieceYCount do
             for x = 1, pieceXCount do
                 if pieceStructures[pieceType][testRotation][y][x] ~= ' '
-                and (testX + x) < 1 then
+                        and (testX + x) < 1 then
                     return false
                 end
             end
@@ -838,13 +836,17 @@ function love.load()
 
         return true
     end
+    --
 end
 
 function love.draw()
-    -- etc.
-
+    -- vervang:
+    for y = 1, 4 do
+        for x = 1, 4 do
+    -- met:    
     for y = 1, pieceYCount do
         for x = 1, pieceXCount do
+    --
             local block = pieceStructures[pieceType][pieceRotation][y][x]
             if block ~= ' ' then
                 drawBlock(block, x + pieceX, y + pieceY)
@@ -853,6 +855,7 @@ function love.draw()
     end
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_19)</sup>  
 
 ### Checking right of playing area (D)
 If any block's X position is greater than the width of the playing area (i.e. off the right of the playing area), then the function also returns false.
@@ -861,7 +864,7 @@ De volledige code tot op dit punt:
 
 ```lua
 function love.load()
-    -- etc.
+    -- ...
 
     function canPieceMove(testX, testY, testRotation)
         for y = 1, pieceYCount do

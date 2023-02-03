@@ -147,19 +147,6 @@ function love.load()
     pieceX = 3
     pieceY = 0
     timer = 0
-
-    function canPieceMove(testX, testY, testRotation)
-        for y = 1, 4 do
-            for x = 1, 4 do
-                if pieceStructures[pieceType][testRotation][y][x] ~= ' '
-                and (testX + x) < 1 then
-                    return false
-                end
-            end
-        end
-
-        return true
-    end
 end
 
 function love.draw()
@@ -216,17 +203,10 @@ function love.keypressed(key)
             pieceRotation = #pieceStructures[pieceType]
         end
     elseif key == 'left' then
-        local testX = pieceX - 1
+        pieceX = pieceX - 1
 
-        if canPieceMove(testX, pieceY, pieceRotation) then
-            pieceX = testX
-        end
     elseif key == 'right' then
-        local testX = pieceX + 1
-
-        if canPieceMove(testX, pieceY, pieceRotation) then
-            pieceX = testX
-        end
+        pieceX = pieceX + 1
     end
 end
 
@@ -234,9 +214,6 @@ function love.update(dt)
     timer = timer + dt
     if timer >= 0.5 then
         timer = 0
-        local testY = pieceY + 1
-        if canPieceMove(pieceX, testY, pieceRotation) then
-            pieceY = testY
-        end
+        pieceY = pieceY + 1
     end
 end
