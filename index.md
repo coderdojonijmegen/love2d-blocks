@@ -153,6 +153,7 @@ function love.draw()
         for x = 1, 10 do
             -- voeg toe:
             love.graphics.setColor(.87, .87, .87)
+            --
             
             local blockSize = 20
             local blockDrawSize = blockSize - 1
@@ -195,6 +196,7 @@ function love.load()
             inert[y][x] = ' '
         end
     end
+    --
 end
 
 function love.draw()
@@ -205,6 +207,7 @@ function love.draw()
     -- door:
     for y = 1, gridYCount do
         for x = 1, gridXCount do
+    --
 end
 ```
 <sup>[main.lua](blocks_wip/main.lua_4)</sup>
@@ -233,6 +236,7 @@ function love.load()
     inert[14][5] = 's'
     inert[13][6] = 't'
     inert[12][7] = 'z'
+    --
 end
 
 function love.draw()
@@ -265,6 +269,7 @@ function love.draw()
                 blockDrawSize,
                 blockDrawSize
             )
+            --
         end
     end
 end
@@ -308,7 +313,7 @@ De rechte lijn ziet er als volgt uit:
 }
 ```
 
-Dit zijn alle puzzelstukken; voeg deze boven aan het bestand toe:
+Dit zijn alle puzzelstukken; voeg deze toe aan functie `love.load()`:
 
 ```lua
 function love.load()
@@ -455,6 +460,7 @@ function love.load()
     -- voeg toe aan het einde van de functie:
     pieceType = 1
     pieceRotation = 1
+    --
 end
 ```
 <sup>[main.lua](blocks_wip/main.lua_7)</sup>
@@ -495,6 +501,7 @@ function love.draw()
             end
         end
     end
+    --
 end
 ```
 <sup>[main.lua](blocks_wip/main.lua_8)</sup>
@@ -618,6 +625,7 @@ function love.keypressed(key)
         end
         pieceRotation = 1
     end
+    --
 end
 ```
 <sup>[main.lua](blocks_wip/main.lua_12)</sup>
@@ -634,6 +642,7 @@ function love.load()
     -- voeg deze regels toe onderaan deze functie
     pieceX = 3
     pieceY = 0
+    --
 end
 ```
 
@@ -864,17 +873,22 @@ De volledige code tot op dit punt:
 
 ```lua
 function love.load()
-    -- ...
 
     function canPieceMove(testX, testY, testRotation)
         for y = 1, pieceYCount do
             for x = 1, pieceXCount do
-                if pieceStructures[pieceType][testRotation][y][x] ~= ' ' and (
-                    (testX + x) < 1
-                    or (testX + x) > gridXCount
-                ) then
+                -- replace
+                if pieceStructures[pieceType][testRotation][y][x] ~= ' '
+                        and (testX + x) < 1 then
                     return false
                 end
+                -- by:
+                if pieceStructures[pieceType][testRotation][y][x] ~= ' ' and 
+                    ((testX + x) < 1 or (testX + x) > gridXCount)
+                then
+                    return false
+                end
+                --
             end
         end
 
@@ -882,6 +896,7 @@ function love.load()
     end
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_20)</sup>  
 
 ### Checking bottom of playing area (D)
 If any block's Y position is greater than the height of the playing area (i.e off the bottom of the playing area), then the function also returns false.
@@ -890,18 +905,27 @@ De volledige code tot op dit punt:
 
 ```lua
 function love.load()
-    -- etc.
 
     function canPieceMove(testX, testY, testRotation)
         for y = 1, pieceYCount do
             for x = 1, pieceXCount do
-                if pieceStructures[pieceType][testRotation][y][x] ~= ' ' and (
-                    (testX + x) < 1
-                    or (testX + x) > gridXCount
-                    or (testY + y) > gridYCount
-                ) then
+                -- replace:
+                if pieceStructures[pieceType][testRotation][y][x] ~= ' ' and 
+                    ((testX + x) < 1 or (testX + x) > gridXCount)
+                then
                     return false
                 end
+                -- by:
+                if pieceStructures[pieceType][testRotation][y][x] ~= ' ' and 
+                    (
+                        (testX + x) < 1
+                        or (testX + x) > gridXCount
+                        or (testY + y) > gridYCount
+                    ) 
+                then
+                    return false
+                end
+                --
             end
         end
 
@@ -909,6 +933,7 @@ function love.load()
     end
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_21)</sup>  
 
 ### Checking inert (D)
 If there is an inert block at any block's position, then the function also returns false.
@@ -919,17 +944,26 @@ De volledige code tot op dit punt:
 
 ```lua
 function love.load()
-    -- etc.
 
     function canPieceMove(testX, testY, testRotation)
         for y = 1, pieceYCount do
             for x = 1, pieceXCount do
-                if pieceStructures[pieceType][testRotation][y][x] ~= ' ' and (
-                    (testX + x) < 1
-                    or (testX + x) > gridXCount
-                    or (testY + y) > gridYCount
-                    or inert[testY + y][testX + x] ~= ' '
-                ) then
+                if pieceStructures[pieceType][testRotation][y][x] ~= ' ' and
+                    -- replace: 
+                    (
+                        (testX + x) < 1
+                        or (testX + x) > gridXCount
+                        or (testY + y) > gridYCount
+                    ) 
+                    -- by:
+                    (
+                        (testX + x) < 1
+                        or (testX + x) > gridXCount
+                        or (testY + y) > gridYCount
+                        or inert[testY + y][testX + x] ~= ' '
+                    )
+                    -- 
+                then
                     return false
                 end
             end
@@ -938,10 +972,16 @@ function love.load()
         return true
     end
 
-    -- Temporary
+    -- tijdelijk, om toegevoegde voorwaarde te testen
     inert[8][5] = 'z'
+    --
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_22)</sup>  
+
+Als het stuk valt, wordt het geblokkeerd door het blok. Schuif het stuk eens naar links of rechts. Wat gebeurt er?
+
+Verwijder na het testen de tijdelijke code.
 
 ![het rooster](imgs/15.png)
 
@@ -952,22 +992,36 @@ De volledige code tot op dit punt:
 
 ```lua
 function love.load()
-    -- etc.
 
     function canPieceMove(testX, testY, testRotation)
         for y = 1, pieceYCount do
             for x = 1, pieceXCount do
+                -- vervang:
+                if pieceStructures[pieceType][testRotation][y][x] ~= ' ' and
+                    (
+                        (testX + x) < 1
+                        or (testX + x) > gridXCount
+                        or (testY + y) > gridYCount
+                        or inert[testY + y][testX + x] ~= ' '
+                    )
+                then
+                    return false
+                end
+                -- door:                
                 local testBlockX = testX + x
                 local testBlockY = testY + y
 
-                if pieceStructures[pieceType][testRotation][y][x] ~= ' ' and (
-                    testBlockX < 1
-                    or testBlockX > gridXCount
-                    or testBlockY > gridYCount
-                    or inert[testBlockY][testBlockX] ~= ' '
-                ) then
+                if pieceStructures[pieceType][testRotation][y][x] ~= ' ' and 
+                    (
+                        testBlockX < 1
+                        or testBlockX > gridXCount
+                        or testBlockY > gridYCount
+                        or inert[testBlockY][testBlockX] ~= ' '
+                    )
+                then
                     return false
                 end
+                --
             end
         end
 
@@ -975,6 +1029,7 @@ function love.load()
     end
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_23)</sup>  
 
 ### Drop (D)
 When the c key is pressed, the piece's Y position is increased by 1 while that position is movable.
@@ -983,16 +1038,16 @@ De volledige code tot op dit punt:
 
 ```lua
 function love.keypressed(key)
-    -- etc.
-
+    -- voeg
     elseif key == 'c' then
         while canPieceMove(pieceX, pieceY + 1, pieceRotation) do
             pieceY = pieceY + 1
         end
-
-    -- etc.
+    -- toe voor de één na laatste "end"
+    end
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_24)</sup>  
 
 ### Resetting piece (D)
 If the timer ticks and the piece can't move down, the piece is reset to its initial position and rotation, and (for now) its initial type.
@@ -1004,8 +1059,12 @@ function love.update(dt)
     timer = timer + dt
     if timer >= 0.5 then
         timer = 0
-
         local testY = pieceY + 1
+        -- vervang:
+        if canPieceMove(pieceX, testY, pieceRotation) then
+            pieceY = testY
+        end
+        -- door:
         if canPieceMove(pieceX, testY, pieceRotation) then
             pieceY = testY
         else
@@ -1014,9 +1073,11 @@ function love.update(dt)
             pieceType = 1
             pieceRotation = 1
         end
+        --
     end
 end
 ``` 
+<sup>[main.lua](blocks_wip/main.lua_25)</sup>  
 
 ### Simplifying code (D)
 The piece is set to its initial state in two places, so a function is made.
@@ -1025,8 +1086,7 @@ De volledige code tot op dit punt:
 
 ```lua
 function love.load()
-    -- etc.
-
+    -- voeg toe aan einde van functie 
     function newPiece()
         pieceX = 3
         pieceY = 0
@@ -1035,8 +1095,7 @@ function love.load()
     end
 
     newPiece()
-
-    -- etc.
+    -- 
 end
 
 function love.update(dt)
@@ -1048,11 +1107,19 @@ function love.update(dt)
         if canPieceMove(pieceX, testY, pieceRotation) then
             pieceY = testY
         else
+        -- vervang:
+            pieceX = 3
+            pieceY = 0
+            pieceType = 1
+            pieceRotation = 1
+        -- door:
             newPiece()
+        --
         end
     end
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_26)</sup>  
 
 ### Creating the sequence of next pieces (D)
 The sequence of next pieces is stored as a table containing the numbers representing piece types in a random order.
@@ -1065,7 +1132,7 @@ De volledige code tot op dit punt:
 
 ```lua
 function love.load()
-    -- etc.
+    -- voeg toe aan einde van functie 
 
     function newSequence()
         sequence = {}
@@ -1078,22 +1145,26 @@ function love.load()
             )
         end
     end
-
     newSequence()
+    --
 end
 
 function love.keypressed(key)
-    -- etc.
-
-    -- Temporary
+    -- tijdelijke code
     elseif key == 's' then
         newSequence()
         print(table.concat(sequence, ', '))
+    --
     end
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_27)</sup>  
+
+Resultaat van drukken op knop "s" in tijdelijke code:
 
 `3, 2, 4, 1, 7, 5, 6`
+
+Verwijder de tijdelijke code na het testen.
 
 ### New piece from sequence (D)
 Wanneer er een nieuw puzzelstuk wordt gemaakt, halen we de vorige uit de sequence en herbruiken we het. 
@@ -1105,8 +1176,15 @@ De volledige code tot op dit punt:
 
 ```lua
 function love.load()
-    -- etc.
 
+    -- vervang:
+    function newPiece()
+        pieceX = 3
+        pieceY = 0
+        pieceType = 1
+        pieceRotation = 1
+    end
+    -- door:
     function newPiece()
         pieceX = 3
         pieceY = 0
@@ -1117,10 +1195,12 @@ function love.load()
             newSequence()
         end
     end
-
+    --
     newPiece()
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_28)</sup>  
+
 ### Add to inert 
 When a piece has come to rest, the piece's blocks are added to the inert blocks.
 
@@ -1138,7 +1218,7 @@ function love.update(dt)
         if canPieceMove(pieceX, testY, pieceRotation) then
             pieceY = testY
         else
-            -- Add piece to inert
+            -- voeg toe
             for y = 1, pieceYCount do
                 for x = 1, pieceXCount do
                     local block =
@@ -1148,12 +1228,13 @@ function love.update(dt)
                     end
                 end
             end
-
+            --
             newPiece()
         end
     end
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_29)</sup>  
 
 ### New piece immediately after drop 
 When a piece is dropped, the timer is set immediately to the limit so that adding the piece to the inert pieces and creating the new piece happen immediately instead of waiting for the timer.
@@ -1164,32 +1245,47 @@ De volledige code tot op dit punt:
 
 ```lua
 function love.load()
-    -- etc.
+    -- vervang:
+    pieceY = 0
+    timer = 0
 
+    pieceXCount = 4
+    -- door:    
+    pieceY = 0
     timer = 0
     timerLimit = 0.5
 
-    -- etc.
+    pieceXCount = 4
+    -- 
 end
 
 function love.update(dt)
+    -- vervang:
+    timer = timer + dt
+    if timer >= 0.5 then
+    -- door:
     timer = timer + dt
     if timer >= timerLimit then
-
-    -- etc.
+    -- 
 end
 
 function love.keypressed(key)
-    -- etc.
-
     elseif key == 'c' then
+        -- vervang:
+        while canPieceMove(pieceX, pieceY + 1, pieceRotation) do
+            pieceY = pieceY + 1
+        end
+        -- door:        
         while canPieceMove(pieceX, pieceY + 1, pieceRotation) do
             pieceY = pieceY + 1
             timer = timerLimit
         end
+        --
     end
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_30)</sup>  
+
 
 ### Finding complete rows 
 Each row of the inert blocks is looped through, and if none of the columns of the row contain an empty block, then the row is complete.
@@ -1208,7 +1304,6 @@ function love.update(dt)
         if canPieceMove(pieceX, testY, pieceRotation) then
             pieceY = testY
         else
-            -- Add piece to inert
             for y = 1, pieceYCount do
                 for x = 1, pieceXCount do
                     local block =
@@ -1218,8 +1313,7 @@ function love.update(dt)
                     end
                 end
             end
-
-            -- Find complete rows
+            -- voeg to:            
             for y = 1, gridYCount do
                 local complete = true
                 for x = 1, gridXCount do
@@ -1230,16 +1324,17 @@ function love.update(dt)
                 end
                 
                 if complete then
-                   -- Temporary
+                   -- tijdelijke code
                    print('Complete row: '..y)
                 end
             end
-
+            --            
             newPiece()
         end
     end
 end
 ```
+
 
 ### Removing complete rows
 If the row is complete, the rows from the complete row to the row second from the top are looped through.

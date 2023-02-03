@@ -154,8 +154,17 @@ function love.load()
     function canPieceMove(testX, testY, testRotation)
         for y = 1, pieceYCount do
             for x = 1, pieceXCount do
-                if pieceStructures[pieceType][testRotation][y][x] ~= ' '
-                        and (testX + x) < 1 then
+                local testBlockX = testX + x
+                local testBlockY = testY + y
+
+                if pieceStructures[pieceType][testRotation][y][x] ~= ' ' and
+                    (
+                        testBlockX < 1
+                        or testBlockX > gridXCount
+                        or testBlockY > gridYCount
+                        or inert[testBlockY][testBlockX] ~= ' '
+                    )
+                then
                     return false
                 end
             end
@@ -163,6 +172,28 @@ function love.load()
 
         return true
     end
+
+    function newPiece()
+        pieceX = 3
+        pieceY = 0
+        pieceType = 1
+        pieceRotation = 1
+    end
+
+    newPiece()
+
+    function newSequence()
+        sequence = {}
+        for pieceTypeIndex = 1, #pieceStructures do
+            local position = love.math.random(#sequence + 1)
+            table.insert(
+                sequence,
+                position,
+                pieceTypeIndex
+            )
+        end
+    end
+    newSequence()
 end
 
 function love.draw()
@@ -230,6 +261,13 @@ function love.keypressed(key)
         if canPieceMove(testX, pieceY, pieceRotation) then
             pieceX = testX
         end
+    elseif key == 'c' then
+        while canPieceMove(pieceX, pieceY + 1, pieceRotation) do
+            pieceY = pieceY + 1
+        end
+    elseif key == 's' then
+        newSequence()
+        print(table.concat(sequence, ', '))
     end
 end
 
@@ -240,6 +278,8 @@ function love.update(dt)
         local testY = pieceY + 1
         if canPieceMove(pieceX, testY, pieceRotation) then
             pieceY = testY
+        else
+            newPiece()
         end
     end
 end
