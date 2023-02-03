@@ -1323,10 +1323,11 @@ function love.update(dt)
                     end
                 end
                 
+                -- tijdelijke code
                 if complete then
-                   -- tijdelijke code
-                   print('Complete row: '..y)
+                    print('Complete row: '..y)
                 end
+                --
             end
             --            
             newPiece()
@@ -1334,6 +1335,7 @@ function love.update(dt)
     end
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_31)</sup>  
 
 
 ### Removing complete rows
@@ -1347,9 +1349,7 @@ De volledige code tot op dit punt:
 
 ```lua
 function love.update(dt)
-    -- etc.
 
-            -- Find complete rows
             for y = 1, gridYCount do
                 local complete = true
                 for x = 1, gridXCount do
@@ -1359,6 +1359,12 @@ function love.update(dt)
                     end
                 end
 
+                -- vervang:
+                if complete then
+                   -- tijdelijke code
+                   print('Complete row: '..y)
+                end
+                -- door:
                 if complete then
                     for removeY = y, 2, -1 do
                         for removeX = 1, gridXCount do
@@ -1371,11 +1377,11 @@ function love.update(dt)
                         inert[1][removeX] = ' '
                     end
                 end
+                --
             end
-
-             -- etc.
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_32)</sup>  
 
 ### Game over
 If a newly created piece is in an unmovable position, then the game is over.
@@ -1386,17 +1392,16 @@ De volledige code tot op dit punt:
 
 ```lua
 function love.update(dt)
-    -- etc.
-
-            newPiece()
-
+            -- voeg toe aan het einde van deze functie
             if not canPieceMove(pieceX, pieceY, pieceRotation) then
                 love.load()
             end
+            --
         end
     end
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_33)</sup>  
 
 ### Offsetting the playing area
 The playing area is drawn 2 blocks from the left of the screen and 5 blocks from the top of the screen.
@@ -1405,8 +1410,22 @@ De volledige code tot op dit punt:
 
 ```lua
 function love.draw()
-    -- etc.
+    -- vervang:
+    for y = 1, gridYCount do
+        for x = 1, gridXCount do
+            drawBlock(inert[y][x], x, y)
+        end
+    end
 
+    for y = 1, pieceYCount do
+        for x = 1, pieceXCount do
+            local block = pieceStructures[pieceType][pieceRotation][y][x]
+            if block ~= ' ' then
+                drawBlock(block, x + pieceX, y + pieceY)
+            end
+        end
+    end
+    -- door:    
     local offsetX = 2
     local offsetY = 5
 
@@ -1424,8 +1443,10 @@ function love.draw()
             end
         end
     end
+    --
 end
 ``` 
+<sup>[main.lua](blocks_wip/main.lua_34)</sup>  
 
 ![het rooster](imgs/16.png)
 
@@ -1436,7 +1457,6 @@ De volledige code tot op dit punt:
 
 ```lua
 function love.draw()
-    -- etc.
 
     local function drawBlock(block, x, y)
         local colors = {
@@ -1448,14 +1468,14 @@ function love.draw()
             s = {.83, .54, .93},
             t = {.97, .58, .77},
             z = {.66, .83, .46},
+            -- voeg toe:
             preview = {.75, .75, .75},
+            --
         }
+```
 
-        -- etc.
-    end
-
-    -- etc.
-
+```lua
+    -- voeg to aan het eind van de functie
     for y = 1, pieceYCount do
         for x = 1, pieceXCount do
             local block = pieceStructures[sequence[#sequence]][1][y][x]
@@ -1464,8 +1484,10 @@ function love.draw()
             end
         end
     end
+    --
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_35)</sup>  
 
 ![het rooster](imgs/17.png)
 
@@ -1476,32 +1498,7 @@ De volledige code tot op dit punt:
 
 ```lua
 function love.load()
-    love.graphics.setBackgroundColor(255, 255, 255)
-
-    pieceStructures = {
-        -- etc.
-    }
-
-    gridXCount = 10
-    gridYCount = 18
-
-    pieceYCount = 4
-    pieceXCount = 4
-
-    timerLimit = 0.5
-
-    function canPieceMove(testX, testY, testRotation)
-        -- etc.
-    end
-
-    function newSequence()
-        -- etc.
-    end
-
-    function newPiece()
-        -- etc.
-    end
-
+    -- voeg toe aan het einde van de functie
     function reset()
         inert = {}
         for y = 1, gridYCount do
@@ -1518,19 +1515,26 @@ function love.load()
     end
 
     reset()
+    --
 end
 
 function love.update(dt)
-             -- etc.
-
+            -- vervang:
+            if not canPieceMove(pieceX, pieceY, pieceRotation) then
+                love.load()
+            end
+            -- met:
             if not canPieceMove(pieceX, pieceY, pieceRotation) then
                 reset()
             end
+            --
         end
     end
 end
 ```
+<sup>[main.lua](blocks_wip/main.lua_36)</sup>  
 
+**Veel plezier met spelen!**
 ## Bron
 
 Deze instructie is een vertaling van de Engelstalige tutorial

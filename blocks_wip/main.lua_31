@@ -1,5 +1,6 @@
 function love.load()
     love.graphics.setBackgroundColor(255, 255, 255)
+
     pieceStructures = {
         {
             {
@@ -290,6 +291,20 @@ function love.update(dt)
                     if block ~= ' ' then
                         inert[pieceY + y][pieceX + x] = block
                     end
+                end
+            end
+            for y = 1, gridYCount do
+                local complete = true
+                for x = 1, gridXCount do
+                    if inert[y][x] == ' ' then
+                        complete = false
+                        break
+                    end
+                end
+
+                if complete then
+                   -- tijdelijke code
+                   print('Complete row: '..y)
                 end
             end
             newPiece()

@@ -1,5 +1,6 @@
 function love.load()
     love.graphics.setBackgroundColor(255, 255, 255)
+
     pieceStructures = {
         {
             {
@@ -213,6 +214,7 @@ function love.draw()
             s = {.83, .54, .93},
             t = {.97, .58, .77},
             z = {.66, .83, .46},
+            preview = {.75, .75, .75},
         }
         local color = colors[block]
         love.graphics.setColor(color)
@@ -228,9 +230,12 @@ function love.draw()
         )
     end
 
+    local offsetX = 2
+    local offsetY = 5
+
     for y = 1, gridYCount do
         for x = 1, gridXCount do
-            drawBlock(inert[y][x], x, y)
+            drawBlock(inert[y][x], x + offsetX, y + offsetY)
         end
     end
 
@@ -238,7 +243,15 @@ function love.draw()
         for x = 1, pieceXCount do
             local block = pieceStructures[pieceType][pieceRotation][y][x]
             if block ~= ' ' then
-                drawBlock(block, x + pieceX, y + pieceY)
+                drawBlock(block, x + pieceX + offsetX, y + pieceY + offsetY)
+            end
+        end
+    end
+    for y = 1, pieceYCount do
+        for x = 1, pieceXCount do
+            local block = pieceStructures[sequence[#sequence]][1][y][x]
+            if block ~= ' ' then
+                drawBlock('preview', x + 5, y + 1)
             end
         end
     end
@@ -292,7 +305,32 @@ function love.update(dt)
                     end
                 end
             end
+            for y = 1, gridYCount do
+                local complete = true
+                for x = 1, gridXCount do
+                    if inert[y][x] == ' ' then
+                        complete = false
+                        break
+                    end
+                end
+
+                if complete then
+                    for removeY = y, 2, -1 do
+                        for removeX = 1, gridXCount do
+                            inert[removeY][removeX] =
+                            inert[removeY - 1][removeX]
+                        end
+                    end
+
+                    for removeX = 1, gridXCount do
+                        inert[1][removeX] = ' '
+                    end
+                end
+            end
             newPiece()
+            if not canPieceMove(pieceX, pieceY, pieceRotation) then
+                love.load()
+            end
         end
     end
 end

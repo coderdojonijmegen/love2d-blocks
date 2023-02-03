@@ -281,7 +281,6 @@ function love.update(dt)
         if canPieceMove(pieceX, testY, pieceRotation) then
             pieceY = testY
         else
-            newPiece()
             for y = 1, pieceYCount do
                 for x = 1, pieceXCount do
                     local block =
@@ -291,6 +290,7 @@ function love.update(dt)
                     end
                 end
             end
+            newPiece()
         end
     end
 end
