@@ -4,7 +4,7 @@ date: 2023-01-20T22:07:09+01:00
 draft: false
 toc: true
 headercolor: "teal-background"
-taal: Löve2D
+onderwerp: Löve2D
 ---
 
 We gaan met 2D game framework Löve2D een spel met vallende blokken maken.
