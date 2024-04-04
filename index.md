@@ -80,7 +80,7 @@ De 7 verschillende stukken worden in een willekeurige volgorde aangeboden.
 
 Voor het programmeren zelf heb je alleen een editor zoals bijvoorbeeld Visual Studio Code nodig. Maar om het programma
 uit te voeren, heb je het Löve2D programma nodig. Deze kun je downloaden vanaf de site 
-[https://love2d.org/](https://love2d.org/).
+[https://love2d.org/](https://love2d.org/). Kijk voor meer informatie over het installeren op [/instructies/love2d-shooter/#installatie-löve](/instructies/love2d-shooter/#installatie-löve).
 
 Als je Löve2D hebt geïnstalleerd, open je een terminal of cmd op Windows en zou je `love.exe` moeten kunnen starten.
 
