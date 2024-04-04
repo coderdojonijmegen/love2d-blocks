@@ -1160,7 +1160,7 @@ Wanneer er een nieuw puzzelstuk wordt gemaakt, halen we de vorige uit de reeks e
 
 Als de reeks leeg is, is maken we een nieuwe.
 
-We verplaatsen de `newPiece` functie naar onder de `newSequence` functie.
+**Let op!** We verplaatsen de `newPiece` functie naar onder de `newSequence` functie.
 
 ```lua
 function love.load()
